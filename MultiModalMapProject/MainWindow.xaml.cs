@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,8 +23,15 @@ namespace MultiModalMapProject
     {
         public MainWindow()
         {
+            // sets the current culture to US
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             InitializeComponent();
             initialiseSpeechComponent();
+            // getting a session key from bing maps for using non-billable call to bing rest api
+            myMap.CredentialsProvider.GetCredentials(c =>
+            {
+                bingMapSessionKey = c.ApplicationId;
+            });
         }
     }
 }

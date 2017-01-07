@@ -1,0 +1,1161 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BingMapsRESTToolkit</name>
+    </assembly>
+    <members>
+        <member name="T:BingMapsRESTToolkit.AvoidType">
+            <summary>
+            Specifies the road types to minimize or avoid when the route is created for the driving travel mode.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.AvoidType.Highways">
+            <summary>
+            Avoids the use of highways in the route. 
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.AvoidType.Tolls">
+            <summary>
+            Avoids the use of toll roads in the route.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.AvoidType.MinimizeHighways">
+            <summary>
+            Minimizes (tries to avoid) the use of highways in the route.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.AvoidType.MinimizeTolls">
+            <summary>
+            Minimizes (tries to avoid) the use of toll roads in the route.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.ConfidenceLevel">
+            <summary>
+            The level of confidence that the geocoded location result is a match.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ConfidenceLevel.None">
+            <summary>
+            No confidence level set.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ConfidenceLevel.High">
+            <summary>
+            High confience match.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ConfidenceLevel.Medium">
+            <summary>
+            Medium confience match.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ConfidenceLevel.Low">
+            <summary>
+            Low confience match.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.ImageFormatType">
+            <summary>
+            Imagery format types.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ImageFormatType.GIF">
+            <summary>
+            GIF image format.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ImageFormatType.JPEG">
+            <summary>
+            JPEG image format. JPEG format is the default for Road, Aerial and AerialWithLabels imagery.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ImageFormatType.PNG">
+            <summary>
+            PNG image format. PNG is the default format for CollinsBart and OrdnanceSurvey imagery.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.ImageryType">
+            <summary>
+            Types of map imagery.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ImageryType.Aerial">
+            <summary>
+            Aerial imagery.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ImageryType.AerialWithLabels">
+            <summary>
+            Aerial imagery with a road overlay.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ImageryType.Birdseye">
+            <summary>
+            Bird’s eye (oblique-angle) imagery
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ImageryType.BirdseyeWithLabels">
+            <summary>
+            Bird’s eye imagery with a road overlay.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ImageryType.Road">
+            <summary>
+            Roads without additional imagery.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ImageryType.OrdnanceSurvey">
+            <summary>
+            Ordnance Survey imagery.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ImageryType.CollinsBart">
+            <summary>
+            Collins Bart imagery
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.RouteAttributeType">
+            <summary>
+            The type of route attributes to include in a route response.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.RouteAttributeType.All">
+            <summary>
+            Used to specify the following attributes as a group: excluteItinerary, routePath, and transitStops.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.RouteAttributeType.ExcludeItinerary">
+            <summary>
+            Do not include detailed directions in the response. Detailed directions are provided as itinerary items and contain details such as written instructions and traffic location codes.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.RouteAttributeType.RoutePath">
+            <summary>
+            Include a set of point (latitude and longitude) values that describe the route’s path in the response.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.RouteAttributeType.RouteSummariesOnly">
+            <summary>
+            Include only travel time and distance for the route, and does not provide other information. 
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.RouteAttributeType.TransitStops">
+            <summary>
+            Include information about transit stops for transit routes.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.RouteOptimizationType">
+            <summary>
+            Specifies what parameters to use to optimize the route on the map.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.RouteOptimizationType.Distance">
+            <summary>
+            Optimizes route for shortest distance.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.RouteOptimizationType.Time">
+            <summary>
+            Optimizes route for shortst travel time.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.RouteOptimizationType.TimeWithTraffic">
+            <summary>
+            Optimizes route for shortst travel time with respect to current traffic conditions.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.RouteOptimizationType.TimeAvoidClosure">
+            <summary>
+            The route is calculated to minimize the time and avoid road closures. Traffic information is not used in the calculation. 
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.RouteTimeType">
+            <summary>
+            Specifies how to interpret the date and transit time value that is specified by the dateTime parameter.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.RouteTimeType.Arrival">
+            <summary>
+            The dateTime parameter contains the desired arrival time for a transit request.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.RouteTimeType.Departure">
+            <summary>
+            The dateTime parameter contains the desired departure time for a transit request.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.RouteTimeType.LastAvailable">
+            <summary>
+            The dateTime parameter contains the latest departure time available for a transit request.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.TravelModeType">
+            <summary>
+            The mode of travel for the route.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TravelModeType.Driving">
+            <summary>
+            Driving mode.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TravelModeType.Walking">
+            <summary>
+            Walking mode.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TravelModeType.Transit">
+            <summary>
+            Transit mode.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.SeverityType">
+            <summary>
+            Specifies the severity level of a traffic incident.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.SeverityType.LowImpact">
+            <summary>
+            Low impact severity.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.SeverityType.Minor">
+            <summary>
+            Minor severity.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.SeverityType.Moderate">
+            <summary>
+            Moderate severity.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.SeverityType.Serious">
+            <summary>
+            Serious severity.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.TrafficType">
+            <summary>
+            Specifies the type of a traffic incident.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TrafficType.Accident">
+            <summary>
+            Accident incident type.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TrafficType.Congestion">
+            <summary>
+            Congestion incident type.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TrafficType.DisabledVehicle">
+            <summary>
+            Disabled vehicle incident type.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TrafficType.MassTransit">
+            <summary>
+            Mass transit incident type.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TrafficType.Miscellaneous">
+            <summary>
+            Miscellaneous incident type.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TrafficType.OtherNews">
+            <summary>
+            Other news incident type.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TrafficType.PlannedEvent">
+            <summary>
+            Planned event incident type.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TrafficType.RoadHazard">
+            <summary>
+            Road hazard incident type.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TrafficType.Construction">
+            <summary>
+            Construction incident type.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TrafficType.Alert">
+            <summary>
+            Alert incident type.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.TrafficType.Weather">
+            <summary>
+            Weather incident type.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.DateTimeHelper">
+            <summary>
+            A helper class for working iwth OData Dates.
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.DateTimeHelper.ToOdataJson(System.DateTime)">
+            <summary>
+            Converts a DateTime object into an OData date.
+            </summary>
+            <param name="dateTime">The DateTime to convert.</param>
+            <returns>An OData version of the DateTime.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.DateTimeHelper.FromOdataJson(System.String)">
+            <summary>
+            Converts an OData Date into a DateTime object.
+            </summary>
+            <param name="jsonDate">OData Date to convert.</param>
+            <returns>The converted DateTime object.</returns>
+        </member>
+        <member name="T:BingMapsRESTToolkit.ImageryPushpin">
+            <summary>
+            Pushpin defination for Bing Maps REST imagery service: https://msdn.microsoft.com/en-us/library/ff701719.aspx
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryPushpin.Location">
+            <summary>
+            Coordinate to display pushpin.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryPushpin.IconStyle">
+            <summary>
+            The icon style to use for the pushpin.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryPushpin.Label">
+            <summary>
+            Label to display on top of pushpin.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.RouteOptions">
+            <summary>
+            A class that defines the options that can to use when calculating a route.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteOptions.Avoid">
+            <summary>
+            Specifies the road types to minimize or avoid when a route is created for the driving travel mode. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteOptions.DistanceBeforeFirstTurn">
+            <summary>
+            Specifies the distance before the first turn is allowed in the route. 
+            This option only applies to the driving travel mode.
+            An integer distance specified in meters. 
+            Use this parameter to make sure that the moving vehicle has enough distance to make the first turn. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteOptions.Heading">
+            <summary>
+            Specifies the initial heading for the route. An integer value between 0 and 359 that represents degrees from 
+            north where north is 0 degrees and the heading is specified clockwise from north.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteOptions.Optimize">
+            <summary>
+            Specifies what parameters to use to optimize the route.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteOptions.TravelMode">
+            <summary>
+            The mode of travel for the route. Default: Driving. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteOptions.DateTime">
+            <summary>
+            The dateTime parameter identifies the desired time to be used when calculating a route. This is supported by driving and transit routes. 
+            When calculating driving routes the route optimization type should be TimeWithTraffic. The route time will be used as the departure time.
+            When calculating transit routes timeType can be specified. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteOptions.TimeType">
+            <summary>
+            Specifies how to interpret the date and transit time value that is specified by the dateTime parameter.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteOptions.RouteAttributes">
+            <summary>
+            Specifies to include or exclude parts of the routes response.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteOptions.DistanceUnits">
+            <summary>
+            The units to use for distance.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteOptions.Tolerances">
+            <summary>
+             Specifies a series of tolerance values. Each value produces a subset of points that approximates the route 
+             that is described by the full set of points. This parameter is only valid when the routePathOutput parameter 
+             is set to Points. You can specify a maximum of seven (7) tolerance values.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteOptions.MaxSolutions">
+            <summary>
+            Specifies the maximum number of transit or driving routes to return. An interger between 1 and 3.
+            This parameter is available for the Driving and Transit travel modes for routes between two waypoints. 
+            This parameter does not support routes with more than two waypoints. For driving routes, you must not set 
+            the avoid and distanceBeforeFirstTurn parameters.  The maxSolutions parameter is supported for routes in 
+            the United States, Canada, Mexico, United Kingdom, Australia, and India.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.ImageryMetadataRequest">
+            <summary>
+            Requests imagery metadata information from Bing Maps.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryMetadataRequest.ImagerySet">
+            <summary>
+            The type of imagery for which you are requesting metadata.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryMetadataRequest.CenterPoint">
+            <summary>
+            Required when imagerySet is Birdseye or BirdseyeWithLabels. Optional for other imagery sets. The center point to use for the imagery metadata.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryMetadataRequest.GetBasicInfo">
+            <summary>
+            Get only the basic metadata for an imagery set at a specific location. This URL does not return a map tile URL. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryMetadataRequest.IncludeImageryProviders">
+            <summary>
+            When you specified the two-letter ISO country code is included for addresses in the response. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryMetadataRequest.Orientation">
+            <summary>
+            The orientation of the viewport to use for the imagery metadata. This option only applies to Birdseye imagery.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryMetadataRequest.ZoomLevel">
+            <summary>
+            Required if a centerPoint is specified and imagerySet is set to Road, Aerial or AerialWithLabels The level of zoom to use for the imagery metadata.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryMetadataRequest.UseHTTPS">
+            <summary>
+            When set to true tile URL's will use HTTPS.
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ImageryMetadataRequest.GetRequestUrl">
+            <summary>
+            Gets the request URL. Throws an exception if a zoom level is not specified when a centerPoint is specified when ImagerySet is Road, Aerial and AerialWithLabels.
+            </summary>
+            <returns>Imagery Metadata request URL for GET request.</returns>
+        </member>
+        <member name="T:BingMapsRESTToolkit.ImageryRequest">
+            <summary>
+            Requests an image from the REST imagery service.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.ImagerySet">
+            <summary>
+            The type of imagery for which you are requesting metadata.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.CenterPoint">
+            <summary>
+            Required when imagerySet is Birdseye or BirdseyeWithLabels. Optional for other imagery sets. The center point to use for the imagery metadata.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.DeclutterPins">
+            <summary>
+            Specifies whether to change the display of overlapping pushpins so that they display separately on a map. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.Format">
+            <summary>
+            The image format to use for the static map.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.MapArea">
+            <summary>
+            Required when a center point or set of route points are not specified. The geographic area to display on the map.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.ShowTraffic">
+            <summary>
+            Specifies if the traffic flow layer should be displayed on the map or not. Default is false.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.MapWidth">
+            <summary>
+            The width of the map. Default is 350px.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.MapHeight">
+            <summary>
+            The height of the map. Default is 350px.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.GetMetadata">
+            <summary>
+            Optional. Specifies whether to return metadata for the static map instead of the image. 
+            The static map metadata includes the size of the static map and the placement and size 
+            of the pushpins on the static map.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.Query">
+            <summary>
+            A query string that is used to determine the map location to display.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.ZoomLevel">
+            <summary>
+            The level of zoom to display.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.HighlightEntity">
+            <summary>
+            Highlights a polygon for an entity.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.EntityType">
+            <summary>
+            Indicates the type of entity that should be highlighted. The entity of this type that 
+            contains the centerPoint will be highlighted. Supported EntityTypes: CountryRegion, AdminDivision1, or PopulatedPlace.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.Pushpins">
+            <summary>
+            List of pushpins to display on the map. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.Waypoints">
+            <summary>
+            Specifies two or more locations that define the route and that are in sequential order. 
+            A route is defined by a set of waypoints and viaWaypoints (intermediate locations that the route must pass through). 
+            You can have a maximum of 25 waypoints, and a maximum of 10 viaWaypoints between each set of waypoints. 
+            The start and end points of the route cannot be viaWaypoints.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ImageryRequest.RouteOptions">
+            <summary>
+            Options for calculating route.
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ImageryRequest.GetRequestUrl">
+            <summary>
+            Gets the request URL. If both a Query and Address are specified the Query value will be used. 
+            Throws an exception if a Query or Address value is not specified.
+            </summary>
+            <returns>Geocode request URL for GET request.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ImageryRequest.GetPostRequestUrl">
+            <summary>
+            Gets a URL for requesting imagery data for a POST request.
+            </summary>
+            <returns>Imagery request URL for POST request.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ImageryRequest.GetPushpinsAsString">
+            <summary>
+            Returns the Pushpin information as a formated string. 
+            </summary>
+            <returns>A formatted string of pushpin data.</returns>
+        </member>
+        <member name="T:BingMapsRESTToolkit.PointCompression">
+            <summary>
+            This compression algorithm encodes/decodes a collections of coordinates into a string. 
+            This algorithm is used for generating a compressed collection of coordinates for use 
+            with the Bing Maps REST Elevation Service. This algorithm is also used for decoding 
+            the compressed coordinates returned by the GeoData API.
+            
+            These algorithms come from the following documentation:
+            http://msdn.microsoft.com/en-us/library/jj158958.aspx
+            http://msdn.microsoft.com/en-us/library/dn306801.aspx
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.PointCompression.Encode(System.Collections.Generic.List{BingMapsRESTToolkit.Coordinate})">
+            <summary>
+            Compresses a list of coordinates into a string.
+            Based on: http://msdn.microsoft.com/en-us/library/jj158958.aspx
+            </summary>
+            <param name="points">Collection of coordinates to compress.</param>
+            <returns>A compressed string representing a collection coordinates.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.PointCompression.TryDecode(System.String,System.Collections.Generic.List{BingMapsRESTToolkit.Coordinate}@)">
+            <summary>
+            Decodes a collection of coordinates from a compressed string.
+            Based on: http://msdn.microsoft.com/en-us/library/dn306801.aspx
+            </summary>
+            <param name="value">Compressed string to decode</param>
+            <param name="parsedValue">Collection of decoded coordinates.</param>
+            <returns>A boolean indicating if the algorithm was able to decode the compressed coordinates or not.</returns>
+        </member>
+        <member name="T:BingMapsRESTToolkit.SimpleWaypoint">
+            <summary>
+            A simple waypoint class that can be used to calculate a route.
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.SimpleWaypoint.#ctor">
+            <summary>
+            A waypoint to calculate a route through.
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.SimpleWaypoint.#ctor(BingMapsRESTToolkit.Coordinate)">
+            <summary>
+            A waypoint to calculate a route through.
+            </summary>
+            <param name="coordinate">Coordinate of the waypoint.</param>
+        </member>
+        <member name="M:BingMapsRESTToolkit.SimpleWaypoint.#ctor(System.String)">
+            <summary>
+            A waypoint to calculate a route through.
+            </summary>
+            <param name="address">Address or location description of waypoint.</param>
+        </member>
+        <member name="M:BingMapsRESTToolkit.SimpleWaypoint.#ctor(BingMapsRESTToolkit.Coordinate,System.String)">
+            <summary>
+            A waypoint to calculate a route through.
+            </summary>
+            <param name="coordinate">Coordinate of the waypoint.</param>
+            <param name="address">Address or location description of waypoint.</param>
+        </member>
+        <member name="P:BingMapsRESTToolkit.SimpleWaypoint.Coordinate">
+            <summary>
+            The coordinate of the waypoint. When specified this will be used instead of the Address value in requests.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.SimpleWaypoint.Address">
+            <summary>
+            The address query for the waypoint. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.SimpleWaypoint.IsViaPoint">
+            <summary>
+            A bool indicating whether the waypoint is a via point.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.BaseImageryRestRequest">
+            <summary>
+            Abstract class that all Imagery rest requests will derive from.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.ElevationRequest">
+            <summary>
+            A request for elevation data.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ElevationRequest.Points">
+            <summary>
+            A set of coordinates on the Earth to use in elevation calculations. 
+            The exact use of these points depends on the type of elevation request. 
+            Overrides the Bounds value if both are specified.
+            The maximum number of points is 1024.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ElevationRequest.Bounds">
+            <summary>
+            Specifies the rectangular area over which to provide elevation values. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ElevationRequest.Row">
+            <summary>
+            Specifies the number of rows to use to divide the bounding box area into a grid. The rows and columns that define the bounding box each count as two (2) of the rows and columns. Elevation values are returned for all vertices of the grid. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ElevationRequest.Col">
+            <summary>
+            Specifies the number of columns to use to divide the bounding box area into a grid. The rows and columns that define the bounding box each count as two (2) of the rows and columns. Elevation values are returned for all vertices of the grid. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ElevationRequest.Samples">
+            <summary>
+            Specifies the number of equally-spaced elevation values to provide along a polyline path. Used when Points value is set. Make = 1024
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ElevationRequest.Height">
+            <summary>
+            Specifies which sea level model to use to calculate elevation.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ElevationRequest.GetGeoidOffset">
+            <summary>
+            A boolean indicating if the offset from the geoid should be returned. Requires a list of points to be specified.
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ElevationRequest.GetRequestUrl">
+            <summary>
+            Gets a URL for requesting elevation data for a GET request.
+            </summary>
+            <returns>Elevation request URL for GET request.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ElevationRequest.GetPostRequestUrl">
+            <summary>
+            Gets a URL for requesting elevation data for a POST request.
+            </summary>
+            <returns>Elevation request URL for POST request.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ElevationRequest.GetPointsAsString">
+            <summary>
+            Returns the Point information as a formated string. Only the first 1024 points will be used.
+            </summary>
+            <returns>A formatted string of point data.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ElevationRequest.GetElevationCoordinates">
+            <summary>
+            Gets a list of coordinates that are related to the returned index of the elevation data.
+            </summary>
+            <returns>A list of coordinates that are related to the index of the returned elevation data.</returns>
+        </member>
+        <member name="T:BingMapsRESTToolkit.DistanceUnitType">
+            <summary>
+            Units of measurements for distances.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.DistanceUnitType.KM">
+            <summary>
+            Distances in Kilometers.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.DistanceUnitType.Miles">
+            <summary>
+            Distances in Miles
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.ElevationType">
+            <summary>
+            Relative elevation type.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ElevationType.Sealevel">
+            <summary>
+            Geoid Earth model (EGM2008 2.5’).
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.ElevationType.Ellipsoid">
+            <summary>
+            Ellipsoid Earth model (WGS84).
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.EntityType">
+            <summary>
+            Types of location based entities.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.EntityType.Address">
+            <summary>
+            A street address or RoadBlock.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.EntityType.Neighborhood">
+            <summary>
+            A section of a populated place that is typically well-known, but often with indistinct boundaries. 
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.EntityType.PopulatedPlace">
+            <summary>
+            A concentrated area of human settlement, such as a city, town or village.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.EntityType.Postcode1">
+            <summary>
+            The smallest post code category, such as a zip code. 
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.EntityType.AdminDivision1">
+            <summary>
+            First administrative level within the country/region level, such as a state or a province.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.EntityType.AdminDivision2">
+            <summary>
+            Second administrative level within the country/region level, such as a county.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.EntityType.CountryRegion">
+            <summary>
+            Country or region
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.ServiceHelper">
+            <summary>
+            A helper class for making asynchronous requests to REST services.
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ServiceHelper.GetStringAsync(System.Uri)">
+            <summary>
+            Downloads data as a string from a URL.
+            </summary>
+            <param name="url">URL that points to data to download.</param>
+            <returns>A string with the data.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ServiceHelper.GetStreamAsync(System.Uri)">
+            <summary>
+            Downloads data as a stream from a URL.
+            </summary>
+            <param name="url">URL that points to data to download.</param>
+            <returns>A stream with the data.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ServiceHelper.PostStringAsync(System.Uri,System.String,System.String)">
+            <summary>
+            Makes a post request using string data. 
+            </summary>
+            <param name="url">URL to post data to.</param>
+            <param name="data">String representation of data to be posted to service.</param>
+            <returns>Response stream.</returns>
+        </member>
+        <member name="T:BingMapsRESTToolkit.SpatialTools">
+            <summary>
+            A set of useful spatial math tools.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.SpatialTools.EarthRadius">
+            <summary>
+            The approximate spherical radius of the Earth
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.SpatialTools.EarthRadius.KM">
+            <summary>
+            Earth Radius in Kilometers
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.SpatialTools.EarthRadius.Meters">
+            <summary>
+            Earth Radius in Meters
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.SpatialTools.EarthRadius.Miles">
+            <summary>
+            Earth Radius in Miles
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.SpatialTools.EarthRadius.Feet">
+            <summary>
+            Earth Radius in Feet
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.SpatialTools.GetEarthRadius(BingMapsRESTToolkit.DistanceUnitType)">
+            <summary>
+            Retrieves the radius of the earth in a specific distance unit for WGS84.
+            </summary>
+            <param name="units">Unit of distance measurement.</param>
+            <returns>The radius of the earth in a specified distance units.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.SpatialTools.ConvertDistance(System.Double,BingMapsRESTToolkit.DistanceUnitType,BingMapsRESTToolkit.DistanceUnitType)">
+            <summary>
+            Converts distances from miles to km or km to miles.
+            </summary>
+            <param name="distance">Distance to convert.</param>
+            <param name="fromUnits">The units that the distance is in.</param>
+            <param name="toUnits">The units to convert the distance to.</param>
+            <returns>A distance in the specified unit of measurement.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.SpatialTools.ToRadians(System.Double)">
+            <summary>
+            Converts an angle that is in degrees to radians. Angle * (PI / 180)
+            </summary>
+            <param name="angle">An angle in degrees</param>
+            <returns>An angle in radians</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.SpatialTools.ToDegrees(System.Double)">
+            <summary>
+            Converts an angle that is in radians to degress. Angle * (180 / PI)
+            </summary>
+            <param name="angle">An angle in radians</param>
+            <returns>An angle in degrees</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.SpatialTools.HaversineDistance(BingMapsRESTToolkit.Coordinate,BingMapsRESTToolkit.Coordinate,BingMapsRESTToolkit.DistanceUnitType)">
+            <summary>
+            Calculate the distance between two coordinates on the surface of a sphere (Earth).
+            </summary>
+            <param name="origin">First coordinate to calculate distance between.</param>
+            <param name="destination">Second coordinate to calculate distance between.</param>
+            <param name="units">Unit of distance measurement.</param>
+            <returns>The shortest distance in the specifed units.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.SpatialTools.HaversineDistance(System.Double,System.Double,System.Double,System.Double,BingMapsRESTToolkit.DistanceUnitType)">
+            <summary>
+            Calculate the distance between two coordinates on the surface of a sphere (Earth).
+            </summary>
+            <param name="origLat">Origin Latitude.</param>
+            <param name="origLon">Origin Longitude.</param>
+            <param name="destLat">Destination Latitude.</param>
+            <param name="destLon">Destination Longitude.</param>
+            <param name="units">Unit of distance measurement.</param>
+            <returns>The shortest distance in the specifed units.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.SpatialTools.CalculateBearing(BingMapsRESTToolkit.Coordinate,BingMapsRESTToolkit.Coordinate)">
+            <summary>Calculates the bearing between two coordinates.</summary>
+            <param name="origin" type="Coordinate">Initial location.</param>
+            <param name="dest" type="Coordinate">Second location.</param>
+            <returns>The bearing angle between two coordinates.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.SpatialTools.CalculateCoord(BingMapsRESTToolkit.Coordinate,System.Double,System.Double,BingMapsRESTToolkit.DistanceUnitType)">
+            <summary>Calculates a destination coordinate given a starting coordinate, bearing, and distance in KM's.</summary>
+            <param name="origin" type="Coordinate">Initial location.</param>
+            <param name="brng" type="Number">Bearing pointing towards new location.</param>
+            <param name="arcLength" type="Number">A distance in KM's.</param>
+            <param name="units" type="DistanceUnitType">Unit of measurement of the arcLength</param>
+            <returns>A destination coordinate based on an origin point, bearing and distance.</returns>
+        </member>
+        <member name="T:BingMapsRESTToolkit.SimpleAddress">
+            <summary>
+            A simple address class that can be passed in to queries.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.SimpleAddress.AddressLine">
+            <summary>
+            The official street line of an address relative to the area, as specified by the Locality, or PostalCode, properties. Typical use of this element would be to provide a street address or any official address.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.SimpleAddress.Locality">
+            <summary>
+            The locality, such as the city or neighborhood, that corresponds to an address.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.SimpleAddress.AdminDistrict">
+            <summary>
+            The subdivision name in the country or region for an address. This element is typically treated as the first order administrative subdivision, but in some cases it is the second, third, or fourth order subdivision in a country, dependency, or region.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.SimpleAddress.PostalCode">
+            <summary>
+            The post code, postal code, or ZIP Code of an address.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.SimpleAddress.CountryRegion">
+            <summary>
+            The ISO country code for the country. 
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.BaseRestRequest">
+            <summary>
+            An abstract class in which all REST service requests derive from.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.BaseRestRequest.BingMapsKey">
+            <summary>
+            The Bing Maps key for making the request.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.BaseRestRequest.Culture">
+            <summary>
+            The culture to use for the request.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.BaseRestRequest.UserMapView">
+            <summary>
+            The geographic region that corresponds to the current viewport.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.BaseRestRequest.UserLocation">
+            <summary>
+            The user’s current position.
+            </summary>
+        </member>
+        <member name="F:BingMapsRESTToolkit.BaseRestRequest.UserIp">
+            <summary>
+            An Internet Protocol version 4 (IPv4) address.
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.BaseRestRequest.GetRequestUrl">
+            <summary>
+            Abstract method which generates the Bing Maps REST request URL.
+            </summary>
+            <returns>A Bing Maps REST request URL.</returns>
+        </member>
+        <member name="T:BingMapsRESTToolkit.RouteMajorRoadsRequest">
+            <summary>
+            Requests routes from a location to major nearby roads.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteMajorRoadsRequest.Destination">
+            <summary>
+            Specifies the final location for all the routes. 
+            A destination can be specified as a Point, a landmark, or an address.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteMajorRoadsRequest.ExcludeInstructions">
+            <summary>
+            Specifies to return only starting points for each major route in the response. 
+            When this option is not specified, detailed directions for each route are returned. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteMajorRoadsRequest.DistanceUnits">
+            <summary>
+            The units to use for distance.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteMajorRoadsRequest.RouteAttributes">
+            <summary>
+            Specifies to include or exclude parts of the routes response.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.RouteRequest">
+            <summary>
+            A request that calculates routes between waypoints.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteRequest.Waypoints">
+            <summary>
+            Specifies two or more locations that define the route and that are in sequential order. 
+            A route is defined by a set of waypoints and viaWaypoints (intermediate locations that the route must pass through). 
+            You can have a maximum of 25 waypoints, and a maximum of 10 viaWaypoints between each set of waypoints. 
+            The start and end points of the route cannot be viaWaypoints.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.RouteRequest.RouteOptions">
+            <summary>
+            Options to use when calculate route.
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.ServiceManager">
+            <summary>
+            A static class that processes requests to the Bing Maps REST services.
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ServiceManager.GetResponseAsync(BingMapsRESTToolkit.BaseRestRequest)">
+            <summary>
+            Processes a REST requests that returns data.
+            </summary>
+            <param name="request">The REST request to process.</param>
+            <returns>The response from the REST service.</returns>
+        </member>
+        <member name="M:BingMapsRESTToolkit.ServiceManager.GetImageAsync(BingMapsRESTToolkit.BaseImageryRestRequest)">
+            <summary>
+            Processes a REST requests that returns an image stream.
+            </summary>
+            <param name="imageryRequest">The REST request to process.</param>
+            <returns>A stream containing an image.</returns>
+        </member>
+        <member name="T:BingMapsRESTToolkit.GeocodeRequest">
+            <summary>
+            Geocodes a query to it's coordinates.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.GeocodeRequest.Query">
+            <summary>
+            A free form string address or Landmark. Overrides the Address values if both are specified.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.GeocodeRequest.Address">
+            <summary>
+            The Address to geocode.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.GeocodeRequest.MaxResults">
+            <summary>
+            Specifies the maximum number of locations to return in the response.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.GeocodeRequest.IncludeIso2">
+            <summary>
+            When you specified the two-letter ISO country code is included for addresses in the response. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.GeocodeRequest.IncludeNeighborhood">
+            <summary>
+            Specifies to include the neighborhood in the response when it is available. 
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.GeocodeRequest.GetRequestUrl">
+            <summary>
+            Gets the request URL. If both a Query and Address are specified the Query value will be used. Throws an exception if a Query or Address value is not specified.
+            </summary>
+            <returns>Geocode request URL for GET request.</returns>
+        </member>
+        <member name="T:BingMapsRESTToolkit.Coordinate">
+            <summary>
+            A class that defines location coordinate value.
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.Coordinate.#ctor">
+            <summary>
+            A location coordinate.
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.Coordinate.#ctor(System.Double,System.Double)">
+            <summary>
+            A location coordinate.
+            </summary>
+            <param name="latitude">Latitude coordinate vlaue.</param>
+            <param name="longitude">Longitude coordinate value.</param>
+        </member>
+        <member name="P:BingMapsRESTToolkit.Coordinate.Latitude">
+            <summary>
+            Latitude coordinate.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.Coordinate.Longitude">
+            <summary>
+            Longitude coordinate.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.Point.Coordinates">
+            <summary>
+            Latitude,Longitude
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.ReverseGeocodeRequest">
+            <summary>
+            Requests a that converts a coordinate into a location such as an address.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ReverseGeocodeRequest.Point">
+            <summary>
+            A centeral coordinate to perform the nearby search.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ReverseGeocodeRequest.IncludeEntityTypes">
+            <summary>
+            Specifies the entity types that you want to return in the response. Only the types you specify will be returned. If the point cannot be mapped to the entity types you specify, no location information is returned in the response.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ReverseGeocodeRequest.IncludeIso2">
+            <summary>
+            When you specified the two-letter ISO country code is included for addresses in the response. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.ReverseGeocodeRequest.IncludeNeighborhood">
+            <summary>
+            Specifies to include the neighborhood in the response when it is available. 
+            </summary>
+        </member>
+        <member name="T:BingMapsRESTToolkit.TrafficRequest">
+            <summary>
+            Requests traffic information.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.TrafficRequest.MapArea">
+            <summary>
+            Specifies the area to search for traffic incident information. 
+            A rectangular area specified as a bounding box. 
+            The size of the area can be a maximum of 500 km x 500 km. 
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.TrafficRequest.IncludeLocationCodes">
+            <summary>
+            Specifies whether to include traffic location codes in the response. 
+            Traffic location codes provide traffic incident information for pre-defined road segments. 
+            A subscription is typically required to be able to interpret these codes for a geographical area or country.
+            Default is false.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.TrafficRequest.Severity">
+            <summary>
+            Specifies severity level of traffic incidents to return. 
+            The default is to return traffic incidents for all severity levels.
+            </summary>
+        </member>
+        <member name="P:BingMapsRESTToolkit.TrafficRequest.TrafficType">
+            <summary>
+            Specifies the type of traffic incidents to return.
+            </summary>
+        </member>
+        <member name="M:BingMapsRESTToolkit.TrafficRequest.GetRequestUrl">
+            <summary>
+            Gets a URL for requesting traffic data for a GET request.
+            </summary>
+            <returns>Traffic request URL for GET request.</returns>
+        </member>
+    </members>
+</doc>
