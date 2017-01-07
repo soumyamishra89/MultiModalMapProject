@@ -23,6 +23,13 @@ namespace MultiModalMapProject
         private double defaultSearchRadius = 1;
         int zoominFactor = 2;
         int zoomoutFactor = 2;
+
+        /*********************************************************************************************/
+        // routing paramaeters. These parameters can be changed basedon user preference
+        private DistanceUnitType distanceUnits = DistanceUnitType.KM;
+        private TravelModeType travelMode = TravelModeType.Driving;
+        private RouteOptimizationType optimize = RouteOptimizationType.TimeWithTraffic;
+        /**********************************************************************************************/
         LocationConverter locConv = new LocationConverter();
         
         // TODO to be removed
@@ -142,9 +149,9 @@ namespace MultiModalMapProject
         {
             return new RouteOptions()
             {
-                DistanceUnits = DistanceUnitType.KM,
-                TravelMode = TravelModeType.Driving,
-                Optimize = RouteOptimizationType.TimeWithTraffic,
+                DistanceUnits = distanceUnits,
+                TravelMode = travelMode,
+                Optimize = optimize,
                 RouteAttributes = new List<RouteAttributeType>() { RouteAttributeType.All }
             };
 
