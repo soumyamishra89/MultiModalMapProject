@@ -16,9 +16,14 @@ namespace MultiModalMapProject
     using Microsoft.Maps.MapControl.WPF;
     using System;
     using System.Collections.Generic;
-    // author: @marion94
+
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
     public partial class MainWindow : Window
     {
+        // some high value is assigned at the begining to calibrate the hands for zoom in zoom out
+        int referenceDistanceBetweenHands = 10000;
 
         /**List<Double> leftHandX = new List<double>();
         List<Double> leftHandY = new List<double>();
@@ -120,6 +125,11 @@ namespace MultiModalMapProject
         public Pos HandLeftMoveLeft;
 
 
+        /// <summary>
+        /// Initializes a new instance of the MainWindow class.
+        /// </summary>
+ 
+
         // Create a DrawingVisual that contains a rectangle.
         private DrawingVisual CreateDrawingVisualRectangle(DrawingContext drawingContext)
         {
@@ -195,7 +205,7 @@ namespace MultiModalMapProject
             this.imageSource = new DrawingImage(this.drawingGroup);
 
             // Display the drawing using our image control
-            //Image.Source = this.imageSource;
+            Image.Source = this.imageSource;
 
             // Look through all sensors and start the first connected one.
             // This requires that a Kinect is connected at the time of app startup.
@@ -416,8 +426,6 @@ namespace MultiModalMapProject
                                         HandLeftMoveRight.X = HandLeft.Position.X;
                                         //dc.DrawRectangle(Brushes.DarkBlue, null, rec2);
                                     }
-
-                                    // Move to the right
                                     if (HandRight.Position.X > head.Position.X)
                                     {
                                         if (HandLeft.Position.X > HandRightMoveRight.X)
@@ -435,24 +443,6 @@ namespace MultiModalMapProject
                                         }
                                     }
 
-
-                                    // Move to the left 
-                                    if (HandRight.Position.X < head.Position.X)
-                                    {
-                                        if (HandLeft.Position.X > HandRightMoveRight.X)
-                                        {
-                                            dc.DrawRectangle(Brushes.Gray, null, rec);
-                                            HandRightMoveRight.X = 0.5f;
-                                            HandLeftMoveRight.X = -0.5f;
-
-                                            // MOVE RIGHT
-                                        }
-                                        else
-                                        {
-                                            HandRightMoveRight.X = 0.5f;
-                                            HandLeftMoveRight.X = -0.5f;
-                                        }
-                                    }
 
 
 
@@ -603,7 +593,8 @@ namespace MultiModalMapProject
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
-        
+       
     }
 }
+
 
