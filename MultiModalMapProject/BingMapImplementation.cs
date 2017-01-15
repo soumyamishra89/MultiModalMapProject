@@ -11,25 +11,18 @@ using BingMapsRESTToolkit;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
 using System.Windows.Media;
+using MultiModalMapProject.Util;
+
 // This class file contains related to Bing Maps
 namespace MultiModalMapProject
 {
     //author: @soumyamishra89
     public partial class MainWindow
     {
-        private readonly string bingMapsKey = "0JbzNXxaqJam9uOChVzc~OL4ubOxhmU4QXRlhrkhI3g~Aj-KxTfYO5Xfec0xQ0nXJVLPJeYUeFSIRckkxz6CC0v-A9x_hTobSKLks9Rb6g3F";
-        private string bingMapSessionKey;
-        // search radius in KM for nearby places
-        private double defaultSearchRadius = 1;
-        int zoominFactor = 2;
-        int zoomoutFactor = 2;
+         // position of the kinect hand (preferrably right hand)  on the screen relative to the UIElement on which it is drawn
+        System.Windows.Point kinectHandPositionOnScreen = new System.Windows.Point();
 
-        /*********************************************************************************************/
-        // routing paramaeters. These parameters can be changed basedon user preference
-        private DistanceUnitType distanceUnits = DistanceUnitType.KM;
-        private TravelModeType travelMode = TravelModeType.Driving;
-        private RouteOptimizationType optimize = RouteOptimizationType.TimeWithTraffic;
-        /**********************************************************************************************/
+        
         LocationConverter locConv = new LocationConverter();
         
         // TODO to be removed
@@ -47,31 +40,31 @@ namespace MultiModalMapProject
                                                                                               //{
                                                                                               //  myMap.ZoomLevel = distance_between_hands * zoomScalingValue;
                                                                                               //}
-
+            
         }
 
         // zooms in the map based on a defined zoom factor
         private void zoominMap()
         {
-            myMap.ZoomLevel = myMap.ZoomLevel + zoominFactor;
+            myMap.ZoomLevel = myMap.ZoomLevel + StaticVariables.zoominFactor;
         }
 
         // zooms out the map based on a defined zoom factor
         private void zoomoutMap()
         {
-            myMap.ZoomLevel = myMap.ZoomLevel - zoomoutFactor;
+            myMap.ZoomLevel = myMap.ZoomLevel - StaticVariables.zoomoutFactor;
         }
 
         // returns a BingMapsRESTToolkit.Coordinate for a address from Bing Geocode. 
         // Can return empty coordinates
-        private async Task<Coordinate> getLocationForAddress(string address)
+        private async Task<Coordinate> getLocationFromAddress(string address)
         {
             Coordinate addressCoordinates = new Coordinate();
             // geocode request helps in coordinates of an address
             var geocodeRequest = new GeocodeRequest()
             {
                 Query = address,
-                BingMapsKey = bingMapSessionKey,
+                BingMapsKey = StaticVariables.bingMapSessionKey,
                 IncludeIso2 = true,
                 IncludeNeighborhood = true,
             };
@@ -82,25 +75,22 @@ namespace MultiModalMapProject
             {
                 addressCoordinates = new Coordinate(geocodeLoc.Point.Coordinates[0], geocodeLoc.Point.Coordinates[1]);
             }
+            else
+            {
+                //TODO error message to display when the coordinates could not be found
+            }
             return addressCoordinates;
         }
 
-        private async Task<NavteqPoiSchema.Response> getPOIForLocation(double latitude, double longitude)
+        // point of interest nearby a location
+        // queryFilter can be any BingQueryFilters.BingQueryFilter which helps in fecthing specific POI from bing query api
+        private async Task<NavteqPoiSchema.Response> getPOIForLocation(double latitude, double longitude, params BingQueryFilters.BingQueryFilter[] queryFilters)
         {
-            // point of interest nearby a location
-            string baseUrl;
-            //Switch between the NAVTEQ POI data sets for NA and EU based on the longitude value. 
-            if (longitude < -30)
-            {
-                baseUrl = "http://spatial.virtualearth.net/REST/v1/data/f22876ec257b474b82fe2ffcb8393150/NavteqNA/NavteqPOIs";
-            }
-            else
-            {
-                baseUrl = "http://spatial.virtualearth.net/REST/v1/data/c2ae584bbccc4916a0acf75d1e6947b4/NavteqEU/NavteqPOIs";
-            }
+            List<BingQueryFilters.BingQueryFilter> filters = queryFilters.ToList();
+            // the spatial filter is required
+            filters.Insert(0, new BingQueryFilters.SpatialFilter(latitude, longitude, StaticVariables.defaultSearchRadius));
 
-            string query = string.Format("{0}?spatialfilter=nearby({1},{2},{3})&$format=json&key={4}",
-                baseUrl, latitude, longitude, defaultSearchRadius, bingMapSessionKey);
+            string query = BingPOIQueryBuilder.buildPOIQuery(longitude, filters);          
 
             return await GetResponse<NavteqPoiSchema.Response>(new Uri(query));
         }
@@ -149,9 +139,9 @@ namespace MultiModalMapProject
         {
             return new RouteOptions()
             {
-                DistanceUnits = distanceUnits,
-                TravelMode = travelMode,
-                Optimize = optimize,
+                DistanceUnits = StaticVariables.distanceUnits,
+                TravelMode = StaticVariables.travelMode,
+                Optimize = StaticVariables.optimize,
                 RouteAttributes = new List<RouteAttributeType>() { RouteAttributeType.All }
             };
 
@@ -163,7 +153,7 @@ namespace MultiModalMapProject
             var routeOption = getRouteOptions();
             var routeRequest = new RouteRequest()
             {
-                BingMapsKey = bingMapSessionKey,
+                BingMapsKey = StaticVariables.bingMapSessionKey,
                 Waypoints = new List<SimpleWaypoint>() { new SimpleWaypoint(from), new SimpleWaypoint(to) },
                 RouteOptions = routeOption,
             };
@@ -178,7 +168,7 @@ namespace MultiModalMapProject
             var routeOption = getRouteOptions();
             var routeRequest = new RouteRequest()
             {
-                BingMapsKey = bingMapSessionKey,
+                BingMapsKey = StaticVariables.bingMapSessionKey,
                 Waypoints = new List<SimpleWaypoint>() { new SimpleWaypoint(from), new SimpleWaypoint(to) },
                 RouteOptions = routeOption,
             };
@@ -211,7 +201,7 @@ namespace MultiModalMapProject
                     MapPolyline routeLine = new MapPolyline()
                     {
                         Locations = locs,
-                        Stroke = new SolidColorBrush(Colors.Blue),
+                        Stroke = new SolidColorBrush(StaticVariables.routePathColor),
                         StrokeThickness = 5
                     };
                     myMap.Children.Add(routeLine);
@@ -242,5 +232,61 @@ namespace MultiModalMapProject
             }
             return result;
         }
+
+        // the method adds a pushpin at the location of the kinect hand position (preferrably right hand)
+        // the kinectHandPositionOnScreen has a default value of 0,0. It gets updated based on hand position. 
+        private void pointToALocation()
+        {
+            // The kinectHandPositionOnScreen gives coordinates relative to the UIElement on which kinect hands are drawn which in this case is 'KinectCanvas'.
+            // This coordinates needs to translated relative to the Map UIElement to find out the location.
+            System.Windows.Point mapPoint = KinectCanvas.TranslatePoint(kinectHandPositionOnScreen, myMap);
+            // Due to some alignment problem, the Y coordinate is shifted (Open Issue: need to figure out the problem). Hence this offset tries to place the point exactly on the kinect hand position
+            mapPoint.Y = mapPoint.Y - StaticVariables.handPointOffsetY;
+            Microsoft.Maps.MapControl.WPF.Location l = myMap.ViewportPointToLocation(mapPoint);
+            Pushpin pushpin = new Pushpin();
+            pushpin.Location = l;
+            myMap.Children.Add(pushpin);
+
+        }
+
+        // the method gets the location(latitude and longitude) on map based on where the kinect hand (preferrably right hand) is pointing at the map.
+        private Microsoft.Maps.MapControl.WPF.Location getLocationFromScreenPoint()
+        {
+            System.Windows.Point mapPoint = KinectCanvas.TranslatePoint(kinectHandPositionOnScreen, myMap);
+            // Due to some alignment problem, the Y coordinate is shifted (Open Issue: need to figure out the problem). Hence this offset tries to place the point exactly on the kinect hand position
+            mapPoint.Y = mapPoint.Y - StaticVariables.handPointOffsetY;
+            Microsoft.Maps.MapControl.WPF.Location l = myMap.ViewportPointToLocation(mapPoint);
+            return l;
+        }
+
+        // the method gets and adds POI based on the point on application where the kinect hand (preferrably right hand) points. 
+        // In case of no POI is found it displays a no result message. The number of POI is limited by the user. 
+        private async void addPOIToMapFromKinectHandPosition()
+        {
+            Microsoft.Maps.MapControl.WPF.Location handLocation = getLocationFromScreenPoint();
+
+            // returns a NavteqPoiSchema.Response containing details of the POI nearby the location. 
+            var pois = await getPOIForLocation(handLocation.Latitude, handLocation.Longitude);
+            // in case of no result is found, a no result message needs to be displayed
+            if (pois != null && pois.ResultSet != null &&
+                                       pois.ResultSet.Results != null &&
+                                       pois.ResultSet.Results.Length > 0)
+            {
+                myMap.Children.Clear();
+                foreach (var poi in pois.ResultSet.Results)
+                {
+                    var loc = new Microsoft.Maps.MapControl.WPF.Location(poi.Latitude, poi.Longitude);
+                    var pin = new Pushpin();
+                    pin.Tag = poi;
+                    pin.Location = loc;                      
+                    myMap.Children.Add(pin);
+                    // TODO add levels of POI to the screen
+                }
+            }
+            else
+            {
+                // TODO no result message
+            }
+            }
     }
 }

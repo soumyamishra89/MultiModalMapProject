@@ -10,16 +10,16 @@
 
     <Grid Margin="10 0 10 0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MinHeight="67.2"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <m:Map x:Name="myMap" Grid.RowSpan="4"
-               CredentialsProvider="0JbzNXxaqJam9uOChVzc~OL4ubOxhmU4QXRlhrkhI3g~Aj-KxTfYO5Xfec0xQ0nXJVLPJeYUeFSIRckkxz6CC0v-A9x_hTobSKLks9Rb6g3F"/>
-
-        <Viewbox Grid.Row="1" Stretch="Uniform" HorizontalAlignment="Center">
-            <Image Name="Image" Width="640" Height="480"/>
+               CredentialsProvider="0JbzNXxaqJam9uOChVzc~OL4ubOxhmU4QXRlhrkhI3g~Aj-KxTfYO5Xfec0xQ0nXJVLPJeYUeFSIRckkxz6CC0v-A9x_hTobSKLks9Rb6g3F" />
+   
+        <Viewbox Grid.RowSpan="4" >
+            <Image Name="KinectCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </Viewbox>
     </Grid>
 </Window>

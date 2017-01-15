@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MultiModalMapProject.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,7 +31,7 @@ namespace MultiModalMapProject
             // getting a session key from bing maps for using non-billable call to bing rest api
             myMap.CredentialsProvider.GetCredentials(c =>
             {
-                bingMapSessionKey = c.ApplicationId;
+                StaticVariables.bingMapSessionKey = c.ApplicationId;
             });
         }
     }

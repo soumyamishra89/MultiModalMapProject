@@ -72,9 +72,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BingQueryFilters\BingQueryFilter.cs" />
+    <Compile Include="BingQueryFilters\EntityTypeFilter.cs" />
+    <Compile Include="BingQueryFilters\SpatialFilter.cs" />
     <Compile Include="KinectActions.cs" />
     <Compile Include="NavteqPoiSchema.cs" />
     <Compile Include="SpeechRecognition.cs" />
+    <Compile Include="Util\BingPOIQueryBuilder.cs" />
+    <Compile Include="Util\StaticVariables.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -118,7 +123,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="allCountries.txt" />
     <Content Include="lib\Microsoft.Kinect.dll" />
     <Content Include="lib\Microsoft.Speech.dll" />
     <Resource Include="lib\Microsoft.Kinect.xml" />

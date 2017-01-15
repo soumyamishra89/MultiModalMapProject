@@ -5,6 +5,7 @@ using System.Threading;
 using Microsoft.Speech.Recognition;
 using Microsoft.Speech.Synthesis;
 using System.Globalization;
+using MultiModalMapProject.Util;
 
 namespace MultiModalMapProject
 {
@@ -121,14 +122,14 @@ namespace MultiModalMapProject
             Console.WriteLine(speech);
             if (speech.Contains("Zoom-in"))
             {
-                zoominFactor = Array.FindIndex(zoomlevel, value => value.Equals(splitSpeech[2]));
-                Console.WriteLine(" Test: " + speech + " : " + zoominFactor);
+                StaticVariables.zoominFactor = Array.FindIndex(zoomlevel, value => value.Equals(splitSpeech[2]));
+                Console.WriteLine(" Test: " + speech + " : " + StaticVariables.zoominFactor);
                 zoominMap();
             }
             else if (speech.Contains("Zoom-out"))
             {
-                zoomoutFactor = Array.FindIndex(zoomlevel, value => value.Equals(splitSpeech[2]));
-                Console.WriteLine(" Test: " + speech + " : " + zoomoutFactor);
+                StaticVariables.zoomoutFactor = Array.FindIndex(zoomlevel, value => value.Equals(splitSpeech[2]));
+                Console.WriteLine(" Test: " + speech + " : " + StaticVariables.zoomoutFactor);
                 zoomoutMap();
             }
         }

@@ -205,8 +205,8 @@ namespace MultiModalMapProject
             this.imageSource = new DrawingImage(this.drawingGroup);
 
             // Display the drawing using our image control
-            Image.Source = this.imageSource;
-
+            KinectCanvas.Source = this.imageSource;
+            
             // Look through all sensors and start the first connected one.
             // This requires that a Kinect is connected at the time of app startup.
             // To make your app robust against plug/unplug, 
@@ -455,6 +455,7 @@ namespace MultiModalMapProject
                         }
                         else if (skel.TrackingState == SkeletonTrackingState.PositionOnly) // if the skeleton is seated
                         {
+
                             dc.DrawEllipse(
                             this.centerPointBrush,
                             null,
@@ -529,8 +530,13 @@ namespace MultiModalMapProject
 
                     if (drawBrush != null)
                     {
+                        if (joint.JointType == JointType.HandRight)
+                        {
+                            // stores the right hand position to be used on map
+                            kinectHandPositionOnScreen = this.SkeletonPointToScreen(joint.Position);
+                        }
                         drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(joint.Position), JointThickness, JointThickness);  // draw everything : needed !
-
+                        
                     }
 
                 }
@@ -546,6 +552,7 @@ namespace MultiModalMapProject
         /// <returns>mapped point</returns>
         private Point SkeletonPointToScreen(SkeletonPoint skelpoint)
         {
+            
             // Convert point to depth space.  
             // We are not using depth directly, but we do want the points in our 640x480 output resolution.
             DepthImagePoint depthPoint = this.sensor.CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
