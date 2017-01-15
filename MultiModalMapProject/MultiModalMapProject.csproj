@@ -118,6 +118,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="allCountries.txt" />
     <Content Include="lib\Microsoft.Kinect.dll" />
     <Content Include="lib\Microsoft.Speech.dll" />
     <Resource Include="lib\Microsoft.Kinect.xml" />
