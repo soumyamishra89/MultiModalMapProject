@@ -47,11 +47,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Microsoft.Maps.MapControl.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Speech, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Microsoft.Speech.dll</HintPath>
+    <Reference Include="SpeechClient, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\Microsoft.ProjectOxford.SpeechRecognition-x86.1.0.0.2\lib\SpeechClient.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
@@ -75,9 +76,9 @@
     <Compile Include="BingQueryFilters\BingQueryFilter.cs" />
     <Compile Include="BingQueryFilters\EntityTypeFilter.cs" />
     <Compile Include="BingQueryFilters\SpatialFilter.cs" />
+    <Compile Include="BingSpeechRecognitionWithIntent.cs" />
     <Compile Include="KinectActions.cs" />
     <Compile Include="NavteqPoiSchema.cs" />
-    <Compile Include="SpeechRecognition.cs" />
     <Compile Include="Util\BingPOIQueryBuilder.cs" />
     <Compile Include="Util\StaticVariables.cs" />
     <Page Include="MainWindow.xaml">
@@ -124,7 +125,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="lib\Microsoft.Kinect.dll" />
-    <Content Include="lib\Microsoft.Speech.dll" />
     <Resource Include="lib\Microsoft.Kinect.xml" />
     <Content Include="lib\Microsoft.Maps.MapControl.WPF.dll" />
     <Resource Include="lib\Microsoft.Maps.MapControl.WPF.xml" />

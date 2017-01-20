@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace MultiModalMapProject.Util
 {
-    class StaticVariables
+    public static class StaticVariables
     {
         public static readonly string bingMapsKey = "0JbzNXxaqJam9uOChVzc~OL4ubOxhmU4QXRlhrkhI3g~Aj-KxTfYO5Xfec0xQ0nXJVLPJeYUeFSIRckkxz6CC0v-A9x_hTobSKLks9Rb6g3F";
         public static string bingMapSessionKey;
@@ -31,6 +31,7 @@ namespace MultiModalMapProject.Util
         public static Dictionary<string, int> bingPOISearchEntityNameToEntityId = new Dictionary<string, int>();
         static StaticVariables()
         {
+            
             bingPOISearchEntityNameToEntityId.Add("ATM", 3578);
             bingPOISearchEntityNameToEntityId.Add("Train Station", 4013);
             bingPOISearchEntityNameToEntityId.Add("Bus Station", 4170);
@@ -48,7 +49,6 @@ namespace MultiModalMapProject.Util
             bingPOISearchEntityNameToEntityId.Add("Pharmacy", 9565);
             bingPOISearchEntityNameToEntityId.Add("Coffee", 9996);
 
-            bingPOISearchEntityNameToEntityId.Add("School", 8211);
         }
     }
 }

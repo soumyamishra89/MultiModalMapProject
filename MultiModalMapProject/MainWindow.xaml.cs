@@ -27,11 +27,12 @@ namespace MultiModalMapProject
             // sets the current culture to US
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             InitializeComponent();
-            initialiseSpeechComponent();
+            //initialiseSpeechComponent();
+            InitialiseBingSpeechComponents();
             // getting a session key from bing maps for using non-billable call to bing rest api
             myMap.CredentialsProvider.GetCredentials(c =>
             {
-                StaticVariables.bingMapSessionKey = c.ApplicationId;
+                    StaticVariables.bingMapSessionKey = c.ApplicationId;
             });
         }
     }

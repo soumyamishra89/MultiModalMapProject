@@ -19,7 +19,8 @@ namespace MultiModalMapProject
     //author: @soumyamishra89
     public partial class MainWindow
     {
-         // position of the kinect hand (preferrably right hand)  on the screen relative to the UIElement on which it is drawn
+
+        // position of the kinect hand (preferrably right hand)  on the screen relative to the UIElement on which it is drawn
         System.Windows.Point kinectHandPositionOnScreen = new System.Windows.Point();
 
         
