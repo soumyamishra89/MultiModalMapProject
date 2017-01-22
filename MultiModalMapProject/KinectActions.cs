@@ -385,7 +385,7 @@ namespace MultiModalMapProject
                                         counterout = 0;
                                         HandLeftZoomout.X = 0.0f;
                                         HandRightZoomout.X = 0.0f;
-                                        HandRightMoveRight.X = 0.5f;
+                                        HandRightMoveRight.X = 1f;
                                         HandLeftMoveRight.X = -0.5f;
                                         HandsClosedL.X = 0.5f;
                                         HandsClosedR.X = 0.5f;
@@ -397,9 +397,10 @@ namespace MultiModalMapProject
                                     {
 
                                         if (counterin > 7 && !isZoomedIn)  // if they have been closed before and got wider
-
+                                             
                                         {
                                             zoominMap(); // we zoom in
+                                            dc.DrawRectangle(Brushes.RosyBrown, null, rec);
                                             isZoomedIn = true;
                                             HandsClosedL.X = 0.5f;
                                             HandsClosedR.X = 0.5f;
@@ -420,25 +421,27 @@ namespace MultiModalMapProject
                                     // implementation of the moving movement. 
                                     // we first check if the hands are closed , then when they are left or right to the head. Then we record and check when they pass the previous right/left hand 
 
-                                    if (Math.Abs(Math.Abs(HandLeft.Position.X) - Math.Abs(HandRight.Position.X)) < 0.2 && HandRight.Position.X < head.Position.X && Math.Abs(Math.Abs(HandLeft.Position.X) - Math.Abs(HandRight.Position.X)) > 0.1)
+                                    if (Math.Abs(Math.Abs(HandLeft.Position.X) - Math.Abs(HandRight.Position.X)) < 0.2  && Math.Abs(Math.Abs(HandLeft.Position.X) - Math.Abs(HandRight.Position.X)) > 0.1)
                                     {
+                                        if (HandRight.Position.X < head.Position.X)
+                                            dc.DrawRectangle(Brushes.DarkBlue, null, rec2);
                                         HandRightMoveRight.X = HandRight.Position.X;
                                         HandLeftMoveRight.X = HandLeft.Position.X;
-                                        //dc.DrawRectangle(Brushes.DarkBlue, null, rec2);
+                                        //d
                                     }
                                     if (HandRight.Position.X > head.Position.X)
                                     {
                                         if (HandLeft.Position.X > HandRightMoveRight.X)
                                         {
                                             dc.DrawRectangle(Brushes.Gray, null, rec);
-                                            HandRightMoveRight.X = 0.5f;
+                                            HandRightMoveRight.X = 1f;
                                             HandLeftMoveRight.X = -0.5f;
 
                                             // MOVE RIGHT
                                         }
                                         else
                                         {
-                                            HandRightMoveRight.X = 0.5f;
+                                            HandRightMoveRight.X = 1f;
                                             HandLeftMoveRight.X = -0.5f;
                                         }
                                     }
