@@ -16,10 +16,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <m:Map x:Name="myMap" Grid.RowSpan="4"
-               CredentialsProvider="0JbzNXxaqJam9uOChVzc~OL4ubOxhmU4QXRlhrkhI3g~Aj-KxTfYO5Xfec0xQ0nXJVLPJeYUeFSIRckkxz6CC0v-A9x_hTobSKLks9Rb6g3F" />
-   
-        <Viewbox Grid.RowSpan="4" >
-            <Image Name="KinectCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        </Viewbox>
+               CredentialsProvider="0JbzNXxaqJam9uOChVzc~OL4ubOxhmU4QXRlhrkhI3g~Aj-KxTfYO5Xfec0xQ0nXJVLPJeYUeFSIRckkxz6CC0v-A9x_hTobSKLks9Rb6g3F" Margin="0,10,0.2,-10.4" UseLayoutRounding="False" Panel.ZIndex="1" >
+            <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="500" VerticalAlignment="Center" Width="150" SelectionChanged="listBox_SelectionChanged"/>
+        </m:Map>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Bottom" Margin="0,0,0,20" Grid.RowSpan="2" Grid.ColumnSpan="2" Panel.ZIndex="3"/>
+
+
     </Grid>
 </Window>

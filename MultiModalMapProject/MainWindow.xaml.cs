@@ -34,6 +34,31 @@ namespace MultiModalMapProject
             {
                     StaticVariables.bingMapSessionKey = c.ApplicationId;
             });
+            
+
+        }
+        public Point Location { get; set; }
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox speechBox = new TextBox();
+            speechBox.Name = "SpeechBox";
+
+            speechBox.Text = "speech recognition text";
+            speechBox.Background = Brushes.Red;
+
+
+
+
+
+
+
+
+
+        }
+
+        private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

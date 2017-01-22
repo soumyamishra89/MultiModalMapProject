@@ -256,6 +256,10 @@ namespace MultiModalMapProject
                 this.WriteResponseResult(e);
 
                 this.micClient.StartMicAndRecognition();
+
+    
+
+
             }));
         }
         /// <summary>

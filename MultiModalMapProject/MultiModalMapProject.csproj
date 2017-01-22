@@ -124,6 +124,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="chat.png" />
     <Content Include="lib\Microsoft.Kinect.dll" />
     <Resource Include="lib\Microsoft.Kinect.xml" />
     <Content Include="lib\Microsoft.Maps.MapControl.WPF.dll" />
