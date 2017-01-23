@@ -78,7 +78,9 @@
     <Compile Include="BingQueryFilters\SpatialFilter.cs" />
     <Compile Include="BingSpeechRecognitionWithIntent.cs" />
     <Compile Include="KinectActions.cs" />
-    <Compile Include="NavteqPoiSchema.cs" />
+    <Compile Include="JsonSchemas\LUISJsonObject.cs" />
+    <Compile Include="JsonSchemas\NavteqPoiSchema.cs" />
+    <Compile Include="SpeechUtil\LUISIntents.cs" />
     <Compile Include="Util\BingPOIQueryBuilder.cs" />
     <Compile Include="Util\StaticVariables.cs" />
     <Page Include="MainWindow.xaml">

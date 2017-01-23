@@ -7,7 +7,6 @@ namespace MultiModalMapProject.Util
 {
     public static class StaticVariables
     {
-        public static readonly string bingMapsKey = "0JbzNXxaqJam9uOChVzc~OL4ubOxhmU4QXRlhrkhI3g~Aj-KxTfYO5Xfec0xQ0nXJVLPJeYUeFSIRckkxz6CC0v-A9x_hTobSKLks9Rb6g3F";
         public static string bingMapSessionKey;
         // search radius in KM for nearby places
         public static double defaultSearchRadius = 1;

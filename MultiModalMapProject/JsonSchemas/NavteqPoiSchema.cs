@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NavteqPoiSchema
+namespace MultiModalMapProject.JsonSchemas.NavteqPoiSchema
 {
     [DataContract]
     public class Response
