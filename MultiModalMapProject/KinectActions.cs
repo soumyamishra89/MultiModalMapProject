@@ -338,7 +338,7 @@ namespace MultiModalMapProject
                                         if (counterout > 7) // if the hands have decreased from wide opened to close to each other 
                                         //&& !isZoomedIn)
                                         {
-                                            zoomoutMap(); // we zoom in
+                                            zoomoutMap(null); // we zoom in
                                             isZoomedOut = true;
                                             // we initialize the values used before : the wide hands are no longer saved and the compteur goes back to 0
                                             HandLeftZoomout.X = 0.0f;
@@ -399,7 +399,7 @@ namespace MultiModalMapProject
                                         if (counterin > 7 && !isZoomedIn)  // if they have been closed before and got wider
                                              
                                         {
-                                            zoominMap(); // we zoom in
+                                            zoominMap(null); // we zoom in
                                             dc.DrawRectangle(Brushes.RosyBrown, null, rec);
                                             isZoomedIn = true;
                                             HandsClosedL.X = 0.5f;

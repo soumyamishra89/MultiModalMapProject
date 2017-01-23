@@ -41,9 +41,9 @@ namespace MultiModalMapProject
                                                                                               //}
             
         }
-
-        // zooms in the map by the zoominFactor.
-        // zoomInFactor is nullable. In case a null value is sent, then the zoomin is done by a default value.
+        // Summary:
+        //      zooms in the map by the zoominFactor.
+        //      zoomInFactor is nullable. In case a null value is sent, then the zoomin is done by a default value.
         private void zoominMap(int? zoominFactor)
         {
             if (zoominFactor.HasValue)
