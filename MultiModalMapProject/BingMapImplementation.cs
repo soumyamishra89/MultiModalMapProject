@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
 using System.Windows.Media;
 using MultiModalMapProject.Util;
+using System.Threading;
 
 // This class file contains related to Bing Maps
 namespace MultiModalMapProject
@@ -23,7 +24,18 @@ namespace MultiModalMapProject
 
         
         LocationConverter locConv = new LocationConverter();
-        
+
+        // sets default parameters to map and initialises map components if necessary
+        private void InitialiseMapComponent()
+        {
+            myMap.Center = StaticVariables.defaultCenter;
+            // getting a session key from bing maps for using non-billable call to bing rest api
+            myMap.CredentialsProvider.GetCredentials(c =>
+            {
+                StaticVariables.bingMapSessionKey = c.ApplicationId;
+            });
+        }
+
         // TODO to be removed
         private int zoomScalingValue = 19;
         // TODO to be removed
@@ -97,8 +109,8 @@ namespace MultiModalMapProject
             // the spatial filter is required
             filters.Insert(0, new BingQueryFilters.SpatialFilter(latitude, longitude, StaticVariables.defaultSearchRadius));
 
-            string query = BingPOIQueryBuilder.buildPOIQuery(longitude, filters);          
-
+            string query = BingPOIQueryBuilder.buildPOIQuery(longitude, filters);
+            System.Diagnostics.Trace.WriteLine(query);
             return await GetResponse<JsonSchemas.NavteqPoiSchema.Response>(new Uri(query));
         }
 
@@ -111,7 +123,6 @@ namespace MultiModalMapProject
             using (var stream = await response.Content.ReadAsStreamAsync())
             {
                 DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(T));
-                System.Diagnostics.Trace.WriteLine(stream.ToString());
                  
                 return (T)ser.ReadObject(stream);
             }
@@ -253,8 +264,8 @@ namespace MultiModalMapProject
             Pushpin pushpin = new Pushpin();
             pushpin.Location = l;
             myMap.Children.Add(pushpin);
-
         }
+        
 
         // adds a pushpin to a location sent to this method
         private void addPushpinToLocation(double latitude, double longitude)
@@ -279,9 +290,10 @@ namespace MultiModalMapProject
         private async void addPOIToMapFromKinectHandPosition(params BingQueryFilters.BingQueryFilter[] queryFilters)
         {
             Microsoft.Maps.MapControl.WPF.Location handLocation = getLocationFromScreenPoint();
-
+           
             // returns a NavteqPoiSchema.Response containing details of the POI nearby the location. 
             var pois = await getPOIForLocation(handLocation.Latitude, handLocation.Longitude, queryFilters);
+
             // in case of no result is found, a no result message needs to be displayed
             if (pois != null && pois.ResultSet != null &&
                                        pois.ResultSet.Results != null &&
@@ -307,9 +319,9 @@ namespace MultiModalMapProject
         // resets the map to original setting and removes all children from map.
         private void resetMap()
         {
-            //sets the zoom level to 0 for resetting the map
-            myMap.ZoomLevel = 0;
             clearMap();
+            //sets the zoom level to 0 and center of the map to defaultCenter for resetting the map
+            myMap.SetView(StaticVariables.defaultCenter, 0);
             // TODO remove any other elements added in the application due to user action
         }
 

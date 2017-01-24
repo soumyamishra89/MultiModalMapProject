@@ -15,7 +15,8 @@
         }
         string BingQueryFilter.buildFilter()
         {
-            return string.Format("spatialfilter=nearby({1},{2},{3})&", latitude, longitude, searchRadius);
+            System.Diagnostics.Trace.WriteLine(latitude);
+            return string.Format("spatialfilter=nearby({0},{1},{2})&", latitude, longitude, searchRadius);
         }
     }
 }

@@ -15,6 +15,7 @@ using MultiModalMapProject.JsonSchemas.LUISJson;
 using MultiModalMapProject.Util;
 using BingMapsRESTToolkit;
 using MultiModalMapProject.BingQueryFilters;
+using System.Threading;
 
 namespace MultiModalMapProject
 {
@@ -154,10 +155,12 @@ namespace MultiModalMapProject
             this.WriteLine("--- Intent received by OnIntentHandler() ---");
             if (!string.IsNullOrEmpty(e.Payload))
             {
+                
+                this.WriteLine("{0}", e.Payload);
                 using (var stream = new MemoryStream(Encoding.Default.GetBytes(e.Payload)))
                 {
                     DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JsonSchemas.LUISJson.LUISJsonObject));
-                    JsonSchemas.LUISJson.LUISJsonObject luisJson = (JsonSchemas.LUISJson.LUISJsonObject)ser.ReadObject(stream);
+                    LUISJsonObject luisJson = (LUISJsonObject)ser.ReadObject(stream);
                     identifyIntentAndPerformAction(luisJson);
                     Trace.WriteLine(luisJson.Intents[0].IntentValue);
                 }
@@ -166,7 +169,7 @@ namespace MultiModalMapProject
             {
                 // TODO not recognised error message
             }
-            this.WriteLine("{0}", e.Intent.Body);
+           // this.WriteLine("{0}", e.Intent.Body);
             
             // this.WriteLine();
         }
@@ -175,6 +178,11 @@ namespace MultiModalMapProject
         // with the entity, if available. 
         private void identifyIntentAndPerformAction(LUISJsonObject luisJson)
         {
+            // shows the recognised speech on application label.
+            this.Dispatcher.Invoke(() =>
+            {
+                SpeechLabel.Content = luisJson.Query;
+            });
             if (luisJson.Intents.Length > 0)
             {
                 // the json result from LUIS returns intent with highest probability as the first result.
@@ -182,7 +190,7 @@ namespace MultiModalMapProject
                 switch (probableIntent.IntentValue.ToUpper())
                 {
                     case LUISIntents.SHOW_LOCATION:
-                        ProcessShowMeIntent(luisJson);
+                        ProcessShowLocationIntent(luisJson);
                         Trace.WriteLine("LUISIntents.SHOW_ME");
                         break;
                     case LUISIntents.SHOW_NEARBY:
@@ -202,12 +210,16 @@ namespace MultiModalMapProject
             }
         }
 
-        // this method processes the SHOW_ME intent by resolving the location it wants to add pushpin to.
+        // this method processes the SHOW_LOCATION intent by resolving the location it wants to add pushpin to.
         // TODO try to extract location if entity is not identified
-        private async void ProcessShowMeIntent(LUISJsonObject luisJson)
+        private async void ProcessShowLocationIntent(LUISJsonObject luisJson)
         {
+            this.WriteLine("{0}", "------------------ProcessShowLocationIntent------------------");
             // first the map is cleared of all child elements
-            clearMap();
+            this.Dispatcher.Invoke(() =>
+            {
+                clearMap();
+            });
             // the entity whose location is to be identified
             Entity showLocationEntity = null;
             // boolean for any abstract location e.g."here", "there"
@@ -234,34 +246,48 @@ namespace MultiModalMapProject
                 Coordinate coordinateOfEntity = await getLocationFromAddress(showLocationEntity.EntityValue);
                 if (null != coordinateOfEntity)
                 {
-                    addPushpinToLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
+                    this.Dispatcher.Invoke(()=>
+                    {
+                        addPushpinToLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
+                    }
+                    );
                 }
                 // if showlocation entity is identified from speech but there is no such location on map
                 else
                 {
                     // TODO message that location of the address could not be found
                 }
-
-                Trace.WriteLine("Inside ProcessShowMeIntent");
+               
             }
             // if abstractLocation like "here", "there" is found then pushpin is added to kinect hand position 
             else if(isAbstractLocationPresent)
             {
-                ShowLocationOfKinectHandPoint();
+                this.Dispatcher.Invoke(() =>
+                {
+                    Trace.WriteLine("Inside ProcessShowMeIntent: ShowLocationOfKinectHandPoint");
+                    ShowLocationOfKinectHandPoint();
+                });
             }
             // if no entities are found and SHOW_LOCATION intent is identified
             // then the pushpin is added to the center of the map where the kinect hand is poiting to
             else
             {
-                addPushpinToLocation(myMap.Center.Latitude, myMap.Center.Longitude);
+                this.Dispatcher.Invoke(() =>
+                {
+                    addPushpinToLocation(myMap.Center.Latitude, myMap.Center.Longitude);
+                });
             }
         }
 
         // this method processes the SHOW_NEARBY intent by resolving the location and adding Places of Interest (POI) near it.
         private async void ProcessShowNearbyIntent(LUISJsonObject luisJson)
         {
+            this.WriteLine("{0}", "------------------ProcessShowNearbyIntent------------------");
             // first the map is cleared of all child elements
-            clearMap();
+            this.Dispatcher.Invoke(() =>
+            {
+                clearMap();
+            });
             // the entity whose location is to be identified
             Entity showNearbyEntity = null;
             Entity bingEntity = null;
@@ -318,12 +344,20 @@ namespace MultiModalMapProject
                 {
                     if (entityId.HasValue)
                     {
-                        //  add specific places like coffee, bus stop, bar, based on enity name specified by user
-                        addPushPinAtPOI(await getPOIForLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude, new EntityTypeFilter(entityId.Value.ToString())));
-                    }
+                        JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude, new EntityTypeFilter(entityId.Value.ToString()));
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            //  add specific places like coffee, bus stop, bar, based on enity name specified by user
+                            addPushPinAtPOI(poiResponse);
+                        });
+ }
                     else {
-                        // finds all POI at the location
-                        addPushPinAtPOI(await getPOIForLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude));
+                        JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            // finds all POI at the location
+                            addPushPinAtPOI(poiResponse);
+                        });
                     }
                 }
                 // in case location is not specified but specific POI is mentioned then POI is found at the place where the user kinect hand is pointed.
@@ -334,25 +368,34 @@ namespace MultiModalMapProject
                         // if the user mentions a abstractlocation like "here" or "there"
                         if (isAbstractLocationPresent)
                         {
-                            addPOIToMapFromKinectHandPosition(new EntityTypeFilter(entityId.Value.ToString()));
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                addPOIToMapFromKinectHandPosition(new EntityTypeFilter(entityId.Value.ToString()));
+                            });
                         }
                         // if the user does not mention any location for finding POI then map center is taken as reference location
                         else
                         {
-                            addPushPinAtPOI(await getPOIForLocation(myMap.Center.Latitude, myMap.Center.Longitude, new EntityTypeFilter(entityId.Value.ToString())));
+                            JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(myMap.Center.Latitude, myMap.Center.Longitude, new EntityTypeFilter(entityId.Value.ToString()));
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                addPushPinAtPOI(poiResponse);
+
+                            });
                         }
                     }
                 }
-                
             }
             // if no entities are found and SHOW_NEARBY intent is identified
             // then the POI nearby to the location where the kinect hand is pointing to is found
             else
             {
-                addPOIToMapFromKinectHandPosition();
+                this.Dispatcher.Invoke(() =>
+                {
+                    addPOIToMapFromKinectHandPosition();
+                });
             }
         }
-
 
         // this method handles the zoom intent from the recognised speech. 
         // helps in zoom in or out of the map. 
@@ -360,6 +403,7 @@ namespace MultiModalMapProject
         // zoomFlag = ZOOM_IN means the map is to be zoomed in and ZOOM_OUT means map is to be zoomed out
         private async void HandleZoomMapIntent(LUISJsonObject luisJson, ZoomFlags zoomFlag)
         {
+            this.WriteLine("{0}", "------------------HandleZoomMapIntent------------------:" + zoomFlag);
             // Zoom in intent expects a number entity for be able to zoomin bu that factor.
             Entity numberEntity = null;
             // zooming can be done on a particular location. e.g "Zoom in on Berlin by 8"
@@ -410,27 +454,36 @@ namespace MultiModalMapProject
             // if zoom is directed at a particular location then the center of the map is set to that location and then zooming is done
             if (null != coordinateOfLocationEntity)
             {
-                if (ZoomFlags.ZOOM_IN == zoomFlag)
-                    setCenterAndZoominLevelOfMap(coordinateOfLocationEntity.Latitude, coordinateOfLocationEntity.Longitude, zoomFactor);
-                else if (ZoomFlags.ZOOM_OUT == zoomFlag)
-                    setCenterAndZoomoutLevelOfMap(coordinateOfLocationEntity.Latitude, coordinateOfLocationEntity.Longitude, zoomFactor);
+                this.Dispatcher.Invoke(() =>
+                {
+                    if (ZoomFlags.ZOOM_IN == zoomFlag)
+                        setCenterAndZoominLevelOfMap(coordinateOfLocationEntity.Latitude, coordinateOfLocationEntity.Longitude, zoomFactor);
+                    else if (ZoomFlags.ZOOM_OUT == zoomFlag)
+                        setCenterAndZoomoutLevelOfMap(coordinateOfLocationEntity.Latitude, coordinateOfLocationEntity.Longitude, zoomFactor);
+                });
             }
             // if no location is specified then following part is executed
             else {
                 // abstarctLocation specifies values like "here", "there". which would zoom at the location where kinect hand is pointing to
                 if (isAbstractLocationPresent)
                 {
-                    if (ZoomFlags.ZOOM_IN == zoomFlag)
-                        zoominMapAtKinectHandLocation(zoomFactor);
-                    else if (ZoomFlags.ZOOM_OUT == zoomFlag)
-                        zoomoutMapAtKinectHandLocation(zoomFactor);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        if (ZoomFlags.ZOOM_IN == zoomFlag)
+                            zoominMapAtKinectHandLocation(zoomFactor);
+                        else if (ZoomFlags.ZOOM_OUT == zoomFlag)
+                            zoomoutMapAtKinectHandLocation(zoomFactor);
+                    });
                 }
                 // if only zooming is requested then the zooming is done at the default center
                 else {
-                    if (ZoomFlags.ZOOM_IN == zoomFlag)
-                        zoominMap(zoomFactor);
-                    else if (ZoomFlags.ZOOM_OUT == zoomFlag)
-                        zoomoutMap(zoomFactor);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        if (ZoomFlags.ZOOM_IN == zoomFlag)
+                            zoominMap(zoomFactor);
+                        else if (ZoomFlags.ZOOM_OUT == zoomFlag)
+                            zoomoutMap(zoomFactor);
+                    });
                 }
             }
         }

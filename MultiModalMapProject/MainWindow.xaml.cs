@@ -26,46 +26,25 @@ namespace MultiModalMapProject
         {
             // sets the current culture to US
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+            // sets the default culture of all threads to US-en
+            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo("en-US");
             InitializeComponent();
+            // initialiseMapComponent
+            InitialiseMapComponent();
             //initialiseSpeechComponent();
             InitialiseBingSpeechComponents();
-            // getting a session key from bing maps for using non-billable call to bing rest api
-            myMap.CredentialsProvider.GetCredentials(c =>
-            {
-                    StaticVariables.bingMapSessionKey = c.ApplicationId;
-            });
-            
-
-        }
-        public Point Location { get; set; }
-        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox speechBox = new TextBox();
-            speechBox.Name = "SpeechBox";
-
-            speechBox.Text = "speech recognition text";
-            speechBox.Background = Brushes.Red;
-
-
-
-
-
-
-
-
-
-        }
-
-        private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+                    
 
         }
 
         // resets the application to its initial state. All the ui elements are set to their initial state.
-       private void resetApplication()
+        private void resetApplication()
         {
             // resets the map to its initial state
-            resetMap();
+            this.Dispatcher.Invoke(() =>
+            {
+                resetMap();
+            });
         }
     }
 }

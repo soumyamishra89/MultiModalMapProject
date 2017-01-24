@@ -8,22 +8,23 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Title="MainWindow" Height="735" Width="770" Loaded="WindowLoaded" Closing="WindowClosing">
 
-    <Grid Margin="10 0 10 0">
+    <Grid >
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20*"/>            
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <m:Map x:Name="myMap" Grid.RowSpan="4"
-               CredentialsProvider="0JbzNXxaqJam9uOChVzc~OL4ubOxhmU4QXRlhrkhI3g~Aj-KxTfYO5Xfec0xQ0nXJVLPJeYUeFSIRckkxz6CC0v-A9x_hTobSKLks9Rb6g3F" Margin="0,10,0.2,-10.4" UseLayoutRounding="False" Panel.ZIndex="1" >
-            <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="500" VerticalAlignment="Center" Width="150" SelectionChanged="listBox_SelectionChanged"/>
-        </m:Map>
-        <Viewbox Grid.RowSpan="4" >
-            <Image Name="KinectCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        
+        <m:Map x:Name="myMap" Grid.Row="0"
+               CredentialsProvider="0JbzNXxaqJam9uOChVzc~OL4ubOxhmU4QXRlhrkhI3g~Aj-KxTfYO5Xfec0xQ0nXJVLPJeYUeFSIRckkxz6CC0v-A9x_hTobSKLks9Rb6g3F">
+            <!-- <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="500" VerticalAlignment="Center" Width="150" SelectionChanged="listBox_SelectionChanged" Margin="10,103,0,102.6" Margin="0,10,0.2,-10.4" UseLayoutRounding="False" Panel.ZIndex="1" />
+       --> </m:Map>
+        <Viewbox Grid.Row="0">
+            <Image Name="KinectCanvas"/>
         </Viewbox>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Bottom" Margin="0,0,0,20" Grid.RowSpan="2" Grid.ColumnSpan="2" Panel.ZIndex="3"/>
-
-
+        <!--<TextBlock x:Name="textBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Bottom" Margin="0,0,0,20" Grid.RowSpan="2" Grid.ColumnSpan="2" Panel.ZIndex="3"/>
+-->
+        <Border BorderBrush="DarkCyan" BorderThickness="1" Grid.Row="4" >
+        <Label Name="SpeechLabel" Background="White" Content="SpeechLabel" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextElement.FontSize="20" TextElement.FontWeight="Bold" TextElement.FontStyle="Italic" />
+        </Border>
     </Grid>
 </Window>
