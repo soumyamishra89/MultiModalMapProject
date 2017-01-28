@@ -46,5 +46,11 @@ namespace MultiModalMapProject
                 resetMap();
             });
         }
+
+        private void listResult()
+        {
+            listBox.Items.Add("result1");
+            listBox.Items.Add("result2");
+        }
     }
 }

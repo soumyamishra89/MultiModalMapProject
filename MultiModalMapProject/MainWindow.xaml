@@ -16,8 +16,9 @@
         
         <m:Map x:Name="myMap" Grid.Row="0"
                CredentialsProvider="0JbzNXxaqJam9uOChVzc~OL4ubOxhmU4QXRlhrkhI3g~Aj-KxTfYO5Xfec0xQ0nXJVLPJeYUeFSIRckkxz6CC0v-A9x_hTobSKLks9Rb6g3F">
-            <!-- <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="500" VerticalAlignment="Center" Width="150" SelectionChanged="listBox_SelectionChanged" Margin="10,103,0,102.6" Margin="0,10,0.2,-10.4" UseLayoutRounding="False" Panel.ZIndex="1" />
-       --> </m:Map>
+            <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="500" VerticalAlignment="Center" Width="150" SelectionChanged="listBox_SelectionChanged"  Margin="0,10,0.2,-10.4" UseLayoutRounding="True" Panel.ZIndex="2" />
+        </m:Map>
+
         <Viewbox Grid.Row="0">
             <Image Name="KinectCanvas"/>
         </Viewbox>
