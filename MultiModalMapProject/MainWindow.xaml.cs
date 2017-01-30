@@ -33,8 +33,8 @@ namespace MultiModalMapProject
             InitialiseMapComponent();
             //initialiseSpeechComponent();
             InitialiseBingSpeechComponents();
-                    
 
+            listResult();
         }
 
         // resets the application to its initial state. All the ui elements are set to their initial state.
