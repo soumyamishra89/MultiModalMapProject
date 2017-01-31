@@ -99,9 +99,8 @@ namespace MultiModalMapProject
         Joint joint2 = new Joint();
         Joint hip = new Joint();
         Joint head = new Joint();
-        int cursorX = 0;
-        int cursorY = 0;
-
+        int imp_click = 0;
+        int imp_click1 = 0;
 
         private int counterin = 0;
         private int counterout;
@@ -419,17 +418,17 @@ namespace MultiModalMapProject
                                     }
 
 
-                                    if (HandLeft.Position.Y + 0.3f > HandsClosedL.Y && HandRight.Position.Y < HandsClosedR.Y)
+                                    if (HandLeft.Position.Y + 0.3f>HandsClosedL.Y && HandRight.Position.Y<HandsClosedR.Y)
                                     {
                                         imp_click = 1;
                                     }
 
-                                    if (HandLeft.Position.Y < HandsClosedL.Y && imp_click == 1)
+                                    if (HandLeft.Position.Y<HandsClosedL.Y && imp_click==1)
                                     {
                                         imp_click1 = 1;
                                     }
 
-                                    if (Math.Abs(head.Position.X + 0.1) < Math.Abs(HandLeft.Position.X))
+                                    if (Math.Abs(head.Position.X+0.1)<Math.Abs(HandLeft.Position.X))
                                     {
                                         imp_click = 0;
                                         imp_click1 = 0;
@@ -442,46 +441,15 @@ namespace MultiModalMapProject
                                         imp_click1 = 0;
                                     }
 
-                                    if (HandLeft.Position.Y < HandsClosedL.Y && imp_click == 1 && imp_click1 == 1)
+                                    if (HandLeft.Position.Y<HandsClosedL.Y && imp_click==1 && imp_click1 == 1)
                                     {
-                                        
                                         dc.DrawRectangle(Brushes.Green, null, rec);
                                         imp_click = 0;
                                     }
 
 
-                                    // get the left and right hand Joints
-                                    Joint jointRight = sd.Joints[JointType.HandRight];
-                                    Joint jointLeft = sd.Joints[JointType.HandLeft];
-
-                                    // scale those Joints to the primary screen width and height
-                                    Joint scaledRight = jointRight.ScaleTo((int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, SkeletonMaxX, SkeletonMaxY);
-                                    Joint scaledLeft = jointLeft.ScaleTo((int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, SkeletonMaxX, SkeletonMaxY);
-
-                                    // figure out the cursor position based on left/right handedness
-                                    if (LeftHand.IsChecked.GetValueOrDefault())
-                                    {
-                                        cursorX = (int)scaledLeft.Position.X;
-                                        cursorY = (int)scaledLeft.Position.Y;
-                                    }
-                                    else
-                                    {
-                                        cursorX = (int)scaledRight.Position.X;
-                                        cursorY = (int)scaledRight.Position.Y;
-                                    }
-                                    bool leftClick;
-
-                                    // figure out whether the mouse button is down based on where the opposite hand is
-                                    //if ((LeftHand.IsChecked.GetValueOrDefault() && jointRight.Position.Y > ClickThreshold) ||
-                                    //(!LeftHand.IsChecked.GetValueOrDefault() && jointLeft.Position.Y > ClickThreshold))
-                                    leftClick = true;
-                                    //else
-                                    //leftClick = false;
-
-                                    Status.Text = cursorX + ", " + cursorY + ", " + leftClick;
-                                    NativeMethods.SendMouseInput(cursorX, cursorY, (int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, leftClick);
-
-
+                                    
+                                    
 
 
 
@@ -512,14 +480,6 @@ namespace MultiModalMapProject
                 //this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
             }
         }
-
-
-
-        // prevent drawing outside of our render area
-        //this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
-    }
-        }
-
 
         /// <summary>
         /// Draws a skeleton's bones and joints

@@ -6,7 +6,9 @@
         xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
         xmlns:resx="clr-namespace:MultiModalMapProject.Properties"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:my="clr-namespace:Microsoft.Samples.Kinect.WpfViewers;assembly=Microsoft.Samples.Kinect.WpfViewers"
         Title="MainWindow" Height="735" Width="770" Loaded="WindowLoaded" Closing="WindowClosing">
+
 
     <Grid >
         <Grid.RowDefinitions>
