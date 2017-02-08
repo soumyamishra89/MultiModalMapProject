@@ -55,7 +55,7 @@ namespace MultiModalMapProject
 
     partial class MainWindow
     {
-        bool move_trigger = false; // implementation of the moving part
+        
         /// <summary>
         /// The microphone client
         /// </summary>
@@ -203,9 +203,11 @@ namespace MultiModalMapProject
                         break;
                     case LUISIntents.ZOOM_IN:
                         //HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_IN);
-                        move_trigger = true;
+                         move_trigger = true;
                         break;
-                    case LUISIntents.ZOOM_OUT: HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_OUT);
+                    case LUISIntents.ZOOM_OUT:
+                        move_trigger = false;
+                        //HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_OUT);
                         break;
                     case LUISIntents.RESET: resetApplication();
                         break;
