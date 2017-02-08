@@ -58,7 +58,6 @@ namespace MultiModalMapProject
         /// </summary>
         private MicrophoneRecognitionClient micClient;
 
-       
         /// <summary>
         /// Gets or sets subscription key
         /// </summary>
@@ -67,7 +66,7 @@ namespace MultiModalMapProject
             get { return ConfigurationManager.AppSettings["BingSpeechSubscriptionID"]; }
         }
 
-        /// <summary>
+         /// <summary>
         /// Gets the LUIS application identifier.
         /// </summary>
         /// <value>
@@ -129,7 +128,7 @@ namespace MultiModalMapProject
         private void CreateMicrophoneRecoClientWithIntent()
         {
             this.WriteLine("--- Start microphone dictation with Intent detection ----");
-
+           
             this.micClient =
                 SpeechRecognitionServiceFactory.CreateMicrophoneClientWithIntent(
                 this.DefaultLocale,
@@ -197,6 +196,7 @@ namespace MultiModalMapProject
                         ProcessShowNearbyIntent(luisJson);
                         break;
                     case LUISIntents.SHOW_ROUTE:// TODO add implementation for this block
+                        ProcessRouteIntent(luisJson);
                         break;
                     case LUISIntents.ZOOM_IN:
                         HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_IN);
@@ -210,7 +210,7 @@ namespace MultiModalMapProject
             }
         }
 
-        // this method processes the SHOW_LOCATION intent by resolving the location it wants to add pushpin to.
+        // this function processes the SHOW_LOCATION intent by resolving the location it wants to add pushpin to.
         // TODO try to extract location if entity is not identified
         private async void ProcessShowLocationIntent(LUISJsonObject luisJson)
         {
@@ -229,7 +229,7 @@ namespace MultiModalMapProject
             {    
                 foreach (Entity entity in luisJson.Entities)
                 {
-                    if (entity.Type.Contains(LuisEntityTypes.CITY) || entity.Type.Contains(LuisEntityTypes.ARCHSTRUCTURE))
+                    if (entity.Type.Contains(LuisEntityTypes.PLACE))
                     {
                         showLocationEntity = entity;
                     }
@@ -237,7 +237,6 @@ namespace MultiModalMapProject
                     {
                         isAbstractLocationPresent = true;
                     }
-                   
                 }
             }
             
@@ -279,7 +278,7 @@ namespace MultiModalMapProject
             }
         }
 
-        // this method processes the SHOW_NEARBY intent by resolving the location and adding Places of Interest (POI) near it.
+        // this function processes the SHOW_NEARBY intent by resolving the location and adding Places of Interest (POI) near it.
         private async void ProcessShowNearbyIntent(LUISJsonObject luisJson)
         {
             this.WriteLine("{0}", "------------------ProcessShowNearbyIntent------------------");
@@ -297,7 +296,7 @@ namespace MultiModalMapProject
             {
                 foreach (Entity entity in luisJson.Entities)
                 {
-                    if (entity.Type.Contains(LuisEntityTypes.CITY) || entity.Type.Contains(LuisEntityTypes.ARCHSTRUCTURE))
+                    if (entity.Type.Contains(LuisEntityTypes.PLACE))
                     {
                         showNearbyEntity = entity;
                     }
@@ -308,7 +307,7 @@ namespace MultiModalMapProject
                     else if (entity.Type.Contains(LuisEntityTypes.ABSTRACTLOCATION))
                     {
                         isAbstractLocationPresent = true;
-                    }        
+                    }
                 }
             }
             if (null != showNearbyEntity || null != bingEntity)
@@ -350,7 +349,7 @@ namespace MultiModalMapProject
                             //  add specific places like coffee, bus stop, bar, based on enity name specified by user
                             addPushPinAtPOI(poiResponse);
                         });
- }
+                    }
                     else {
                         JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
                         this.Dispatcher.Invoke(() =>
@@ -397,7 +396,38 @@ namespace MultiModalMapProject
             }
         }
 
-        // this method handles the zoom intent from the recognised speech. 
+        // this function shows the route between two points in the map. The points are identified with entity type toLocation and fromLocation.
+        // in case of no 'to' and 'from' location found, the next entity would be abstract location "here" and "there" based on which the route information would be shown
+        private void ProcessRouteIntent(LUISJsonObject luisJson)
+        {
+            this.WriteLine("{0}", "------------------ProcessShowRouteIntent------------------:");
+            if (luisJson.Entities.Length > 0)
+            {
+                foreach (Entity entity in luisJson.Entities)
+                {
+                    if (entity.Type.Contains(LuisEntityTypes.TOLOCATION))
+                    {
+                        RouteParameters.INSTANCE.toLocation = entity.EntityValue;
+                    }
+                    else if (entity.Type.Contains(LuisEntityTypes.FROMLOCATION))
+                    {
+                        RouteParameters.INSTANCE.fromLocation = entity.EntityValue;
+                    }
+                }
+                if (RouteParameters.INSTANCE.isRouteInformationInComplete())
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        // TODO ask user to provide missing information
+                        // set a flag for identifying the continuation of this intent
+                        SpeechLabel.Content = RouteParameters.INSTANCE.getMissingInfoMessage();
+                    });
+                }
+            }
+
+        }
+
+        // this function handles the zoom intent from the recognised speech. 
         // helps in zoom in or out of the map. 
         // the zoom flag tells if the map is to be zoomed in or zoomed out. 
         // zoomFlag = ZOOM_IN means the map is to be zoomed in and ZOOM_OUT means map is to be zoomed out
@@ -420,7 +450,7 @@ namespace MultiModalMapProject
                     {
                         numberEntity = entity;
                     }
-                    else if (entity.Type.Contains(LuisEntityTypes.CITY) || entity.Type.Contains(LuisEntityTypes.ARCHSTRUCTURE))
+                    else if (entity.Type.Contains(LuisEntityTypes.PLACE))
                     {
                         locationEntity = entity;
                     }
@@ -497,6 +527,7 @@ namespace MultiModalMapProject
             this.WriteLine("--- Error received by OnConversationErrorHandler() ---");
             this.WriteLine("Error code: {0}", e.SpeechErrorCode.ToString());
             this.WriteLine("Error text: {0}", e.SpeechErrorText);
+            this.micClient.StartMicAndRecognition();
             // this.WriteLine();
         }
         /// <summary>
@@ -506,8 +537,8 @@ namespace MultiModalMapProject
         /// <param name="e">The <see cref="MicrophoneEventArgs"/> instance containing the event data.</param>
         private void OnMicrophoneStatus(object sender, MicrophoneEventArgs e)
         {
-            Dispatcher.Invoke(() =>
-            {
+           // Dispatcher.Invoke(() =>
+            //{
                 WriteLine("--- Microphone status change received by OnMicrophoneStatus() ---");
                 WriteLine("********* Microphone status: {0} *********", e.Recording);
                 if (e.Recording)
@@ -517,7 +548,7 @@ namespace MultiModalMapProject
                 }
                 
                 // WriteLine();
-            });
+          //  });
         }
 
         /// <summary>
@@ -527,23 +558,18 @@ namespace MultiModalMapProject
         /// <param name="e">The <see cref="SpeechResponseEventArgs"/> instance containing the event data.</param>
         private void OnMicShortPhraseResponseReceivedHandler(object sender, SpeechResponseEventArgs e)
         {
-            Dispatcher.Invoke((Action)(() =>
-            {
-                this.WriteLine("--- OnMicShortPhraseResponseReceivedHandler ---");
-
+            this.WriteLine("--- OnMicShortPhraseResponseReceivedHandler ---");
+           // Dispatcher.Invoke((Action)(() =>
+            //{
                 // we got the final result, so it we can end the mic reco.  No need to do this
                 // for dataReco, since we already called endAudio() on it as soon as we were done
                 // sending all the data.
                 //this.micClient.EndMicAndRecognition();
 
                 this.WriteResponseResult(e);
-
-                this.micClient.StartMicAndRecognition();
-
-    
-
-
-            }));
+                
+          //  }));
+            this.micClient.StartMicAndRecognition();
         }
         /// <summary>
         /// Writes the line.
