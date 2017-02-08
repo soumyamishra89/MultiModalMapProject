@@ -50,9 +50,12 @@ namespace MultiModalMapProject
     // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
     // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     // </copyright>
+
+
+
     partial class MainWindow
     {
-
+        
         /// <summary>
         /// The microphone client
         /// </summary>
@@ -199,9 +202,12 @@ namespace MultiModalMapProject
                         ProcessRouteIntent(luisJson);
                         break;
                     case LUISIntents.ZOOM_IN:
-                        HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_IN);
+                        //HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_IN);
+                         move_trigger = true;
                         break;
-                    case LUISIntents.ZOOM_OUT: HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_OUT);
+                    case LUISIntents.ZOOM_OUT:
+                        move_trigger = false;
+                        //HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_OUT);
                         break;
                     case LUISIntents.RESET: resetApplication();
                         break;

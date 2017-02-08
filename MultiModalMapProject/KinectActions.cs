@@ -12,9 +12,13 @@ namespace MultiModalMapProject
     using System.Windows.Media;
     using Microsoft.Kinect;
     using System.Timers;
-
+    using Coding4Fun.Kinect.Wpf;
     using Microsoft.Maps.MapControl.WPF;
     using System;
+    using System.ComponentModel;
+    using System.Runtime.InteropServices;
+    using Nui = Microsoft.Kinect;
+
     using System.Collections.Generic;
 
     /// <summary>
@@ -22,13 +26,6 @@ namespace MultiModalMapProject
     /// </summary>
     public partial class MainWindow : Window
     {
-        // some high value is assigned at the begining to calibrate the hands for zoom in zoom out
-        int referenceDistanceBetweenHands = 10000;
-
-        /**List<Double> leftHandX = new List<double>();
-        List<Double> leftHandY = new List<double>();
-        List<Double> rightHandX = new List<double>();
-        List<Double> rightHandY = new List<double>();**/
         /// <summary>
         /// Width of output drawing : window vertical
         /// </summary>
@@ -106,6 +103,14 @@ namespace MultiModalMapProject
         Joint joint2 = new Joint();
         Joint hip = new Joint();
         Joint head = new Joint();
+        int imp_click = 0;
+        int imp_click1 = 0;
+        int cursorX = 0;
+        int cursorY = 0;
+        bool move_trigger = false; // implementation of the moving part
+
+        private const float SkeletonMaxX = 0.60f;
+        private const float SkeletonMaxY = 0.40f;
 
         private int counterin = 0;
         private int counterout;
@@ -124,6 +129,9 @@ namespace MultiModalMapProject
         public Pos HandRightMoveLeft;
         public Pos HandLeftMoveLeft;
 
+        bool leftClick=false;
+        bool Allow_Zoom = true;
+
 
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
@@ -135,9 +143,6 @@ namespace MultiModalMapProject
         {
             DrawingVisual drawingVisual = new DrawingVisual();
 
-            // Retrieve the DrawingContext in order to create new drawing content.
-            //DrawingContext drawingContext = drawingVisual.RenderOpen();
-
             // Create a rectangle and draw it in the DrawingContext.
             Rect rect = new Rect(new Point(160, 100), new Size(320, 80));
             drawingContext.DrawRectangle(System.Windows.Media.Brushes.LightGreen, (System.Windows.Media.Pen)null, rect);
@@ -148,14 +153,85 @@ namespace MultiModalMapProject
             return drawingVisual;
         }
 
+        internal struct MouseInput
+        {
+            public int X;
+            public int Y;
+            public uint MouseData;
+            public uint Flags;
+            public uint Time;
+            public IntPtr ExtraInfo;
+        }
+
+        internal struct Input
+        {
+            public int Type;
+            public MouseInput MouseInput;
+        }
+
+        public static class NativeMethods
+        {
+            public const int InputMouse = 0;
+
+            public const int MouseEventMove = 0x01;
+            public const int MouseEventLeftDown = 0x02;
+            public const int MouseEventLeftUp = 0x04;
+            public const int MouseEventRightDown = 0x08;
+            public const int MouseEventRightUp = 0x10;
+            public const int MouseEventAbsolute = 0x8000;
+
+            private static bool lastLeftDown;
+
+            [DllImport("user32.dll", SetLastError = true)]
+            private static extern uint SendInput(uint numInputs, Input[] inputs, int size);
+
+            public static void SendMouseInput(int positionX, int positionY, int maxX, int maxY, bool leftDown)
+            {
+                if (positionX > int.MaxValue)
+                    throw new ArgumentOutOfRangeException("positionX");
+                if (positionY > int.MaxValue)
+                    throw new ArgumentOutOfRangeException("positionY");
+
+                Input[] i = new Input[2];
+
+                // move the mouse to the position specified
+                i[0] = new Input();
+                i[0].Type = InputMouse;
+                i[0].MouseInput.X = (positionX * 65535) / maxX;
+                i[0].MouseInput.Y = (positionY * 65535) / maxY;
+                i[0].MouseInput.Flags = MouseEventAbsolute | MouseEventMove;
+
+                // determine if we need to send a mouse down or mouse up event
+                if(!lastLeftDown && leftDown)
+                {
+                	i[1] = new Input();
+                	i[1].Type = InputMouse;
+                	i[1].MouseInput.Flags = MouseEventLeftDown;
+                }
+                else if(lastLeftDown && !leftDown)
+                {
+                    i[1] = new Input();
+                    i[1].Type = InputMouse;
+                    i[1].MouseInput.Flags = MouseEventLeftUp;
+                }
+
+                lastLeftDown = leftDown;
+
+                // send it off
+                uint result = SendInput(2, i, Marshal.SizeOf(i[0]));
+                if (result == 0)
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+        }
 
 
-        /// <summary>
-        /// Draws indicators to show which edges are clipping skeleton data
-        /// </summary>
-        /// <param name="skeleton">skeleton to draw clipping information for</param>
-        /// <param name="drawingContext">drawing context to draw to</param>
-        private static void RenderClippedEdges(Skeleton skeleton, DrawingContext drawingContext)
+
+    /// <summary>
+    /// Draws indicators to show which edges are clipping skeleton data
+    /// </summary>
+    /// <param name="skeleton">skeleton to draw clipping information for</param>
+    /// <param name="drawingContext">drawing context to draw to</param>
+    private static void RenderClippedEdges(Skeleton skeleton, DrawingContext drawingContext)
         {
             if (skeleton.ClippedEdges.HasFlag(FrameEdges.Bottom))
             {
@@ -316,6 +392,10 @@ namespace MultiModalMapProject
                                 if (joint.JointType.Equals(JointType.Head))
                                 {
                                     head.Position = joint.Position;
+                                    if (head.Position.X == 0.0)
+                                    {
+                                        dc.DrawRectangle(Brushes.Red, null, rec);
+                                    }
                                 }
 
                                 if (joint.JointType.Equals(JointType.HandLeft) || joint.JointType.Equals(JointType.HandRight))
@@ -323,13 +403,15 @@ namespace MultiModalMapProject
                                     if (joint.JointType.Equals(JointType.HandLeft))
                                     {
                                         HandLeft.Position = joint.Position; // we track the position of the left hand because that's what we are interested in
+
                                     }
                                     else if (joint.JointType.Equals(JointType.HandRight))
                                     {
                                         HandRight.Position = joint.Position; // we track the position of the right hand because that's what we are interested in
                                     }
+                                    
 
-                                    if (HandRight.Position.X < 0.1f && HandLeft.Position.X > -0.15f)  // if the hands are closed on to each other in the center
+                                    if (HandRight.Position.X < (0.1f + head.Position.X) && HandLeft.Position.X > (-0.15f + head.Position.X))  // if the hands are closed on to each other in the center
                                     {
 
 
@@ -352,18 +434,17 @@ namespace MultiModalMapProject
                                         HandsClosedR.Y = HandRight.Position.Y;
                                         HandsClosedL.X = HandLeft.Position.X;
                                         HandsClosedL.Y = HandLeft.Position.Y;
-                                        //dc.DrawRectangle(Brushes.Black, null, rec); // if the black rectangles appears, it means the hands are closed to each other
                                     }
 
 
-                                    if (HandRight.Position.X < 0.5f && HandLeft.Position.X > -0.5f) // if the hands are really far one from each other 
+                                    if (HandRight.Position.X < (0.35f + head.Position.X) && HandLeft.Position.X > (-0.35f + head.Position.X)) // if the hands are really far one from each other 
                                     {
                                         if (HandsClosedR.X < HandRight.Position.X && HandsClosedL.X > HandLeft.Position.X) // if the hands are further than when they were closed
                                         {
                                             counterin = counterin + 1; // we increase a counter which tells us if they more spaced
                                                                        // if (counterin>8) dc.DrawRectangle(Brushes.Purple, null, rec);
                                         }
-                                        else if (HandRight.Position.X < 0.1f && HandLeft.Position.X > -0.15f) // if they stay in the middle or return in the middle before getting very wide we initialize everything again
+                                        else if (HandRight.Position.X < (0.1f + head.Position.X) && HandLeft.Position.X > (-0.15f + head.Position.X)) // if they stay in the middle or return in the middle before getting very wide we initialize everything again
                                         {
                                             counterin = 0;
                                             //dc.DrawRectangle(Brushes.Green, null, rec);
@@ -373,7 +454,7 @@ namespace MultiModalMapProject
                                         {
                                             counterout = counterout + 1;
                                         }
-                                        else if (HandRight.Position.X > 0.3f && HandLeft.Position.X < -0.3f) // if they don't and go wide again, we initialize everything
+                                        else if (HandRight.Position.X > (0.45f + head.Position.X) && HandLeft.Position.X < (-0.45f + head.Position.X)) // if they don't and go wide again, we initialize everything
                                         {
                                             counterout = 0;
                                         }
@@ -389,18 +470,23 @@ namespace MultiModalMapProject
                                         HandLeftMoveRight.X = -0.5f;
                                         HandsClosedL.X = 0.5f;
                                         HandsClosedR.X = 0.5f;
-                                        //dc.DrawRectangle(Brushes.RosyBrown, null, rec);
+                                        imp_click = 0;
+                                        imp_click1 = 0;
+                                        leftClick = false;
+                                        //move_trigger = false;
+                                        //Allow_Zoom = true;
+                                         
+                                        dc.DrawRectangle(Brushes.Black, null, rec);
                                     }
 
 
-                                    if (HandRight.Position.X > 0.3f && HandLeft.Position.X < -0.3f) // if the hands are wide 
+                                    if (HandRight.Position.X > (0.3f + head.Position.X) && HandLeft.Position.X < (-0.3f + head.Position.X)) // if the hands are wide 
                                     {
 
-                                        if (counterin > 7 && !isZoomedIn)  // if they have been closed before and got wider
-                                             
+                                        if (counterin > 2)  // if they have been closed before and got wider
+
                                         {
                                             zoominMap(null); // we zoom in
-                                            dc.DrawRectangle(Brushes.RosyBrown, null, rec);
                                             isZoomedIn = true;
                                             HandsClosedL.X = 0.5f;
                                             HandsClosedR.X = 0.5f;
@@ -409,7 +495,7 @@ namespace MultiModalMapProject
                                         }
                                     }
 
-                                    if (HandRight.Position.X > 0.5f && HandLeft.Position.X < -0.5f) // if the hands are wide, it can also mean that we want to zoom out, so we save the positions
+                                    if (HandRight.Position.X > (0.5f + head.Position.X) && HandLeft.Position.X < (-0.5f + head.Position.X)) // if the hands are wide, it can also mean that we want to zoom out, so we save the positions
                                     {
                                         HandLeftZoomout.X = HandLeft.Position.X;
                                         HandRightZoomout.X = HandRight.Position.X;
@@ -418,36 +504,59 @@ namespace MultiModalMapProject
                                     }
 
 
-                                    // implementation of the moving movement. 
-                                    // we first check if the hands are closed , then when they are left or right to the head. Then we record and check when they pass the previous right/left hand 
+                                    //if (HandLeft.Position.Y + 0.3f>HandsClosedL.Y && HandRight.Position.Y<HandsClosedR.Y)
+                                    //{
+                                    //    imp_click = 1;
+                                    //}
 
-                                    if (Math.Abs(Math.Abs(HandLeft.Position.X) - Math.Abs(HandRight.Position.X)) < 0.2  && Math.Abs(Math.Abs(HandLeft.Position.X) - Math.Abs(HandRight.Position.X)) > 0.1)
+                                    //if (HandLeft.Position.Y<HandsClosedL.Y && imp_click==1)
+                                    //{
+                                    //    imp_click1 = 1;
+                                    //}
+
+                                    //if (Math.Abs(head.Position.X+0.1)<Math.Abs(HandLeft.Position.X))
+                                    //{
+                                    //    imp_click = 0;
+                                    //    imp_click1 = 0;
+                                        //dc.DrawRectangle(Brushes.Brown, null, rec);
+                                    //}
+
+                                    //if (HandLeft.Position.Y < hip.Position.Y)
+                                    //{
+                                    //    imp_click = 0;
+                                    //    imp_click1 = 0;
+                                    //}
+
+
+                                    Joint scaledRight = HandRight.ScaleTo((int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, SkeletonMaxX, SkeletonMaxY);
+                                    Joint scaledLeft = HandLeft.ScaleTo((int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, SkeletonMaxX, SkeletonMaxY);
+
+
                                     {
-                                        if (HandRight.Position.X < head.Position.X)
-                                            dc.DrawRectangle(Brushes.DarkBlue, null, rec2);
-                                        HandRightMoveRight.X = HandRight.Position.X;
-                                        HandLeftMoveRight.X = HandLeft.Position.X;
-                                        //d
+                                        cursorX = (int)(HandRight.Position.X*1000);
+                                        //cursorY = (int)(HandRight.Position.Y*100);
                                     }
-                                    if (HandRight.Position.X > head.Position.X)
+                                    //cursorX = (int)scaledRight.Position.X;
+                                    cursorY = (int)scaledRight.Position.Y;
+                                    //NativeMethods.SendMouseInput(cursorX, cursorY, (int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, leftClick);
+                                   
+                                    //if (HandLeft.Position.Y < HandsClosedL.Y && imp_click == 1 && imp_click1 == 1)
+                                    //   if (HandLeft.Position.Y < HandsClosedL.Y && imp_click == 1 && imp_click1 == 1)
+                                    //{
+                                        //Allow_Zoom = false;
+                                        //leftClick = true;
+                                        //dc.DrawRectangle(Brushes.Green, null, rec);
+                                        //imp_click = 0;
+                                        //
+                                    //}
+
+                                    if (move_trigger)
                                     {
-                                        if (HandLeft.Position.X > HandRightMoveRight.X)
-                                        {
-                                            dc.DrawRectangle(Brushes.Gray, null, rec);
-                                            HandRightMoveRight.X = 1f;
-                                            HandLeftMoveRight.X = -0.5f;
+                                        dc.DrawRectangle(Brushes.Green, null, rec);
+                                        NativeMethods.SendMouseInput(cursorX, cursorY, 1000, 1300, leftClick);
+                                        leftClick = true;
 
-                                            // MOVE RIGHT
-                                        }
-                                        else
-                                        {
-                                            HandRightMoveRight.X = 1f;
-                                            HandLeftMoveRight.X = -0.5f;
-                                        }
                                     }
-
-
-
 
                                 }
 
@@ -456,27 +565,12 @@ namespace MultiModalMapProject
                                 isZoomedOut = false;
                             }
                         }
-                        else if (skel.TrackingState == SkeletonTrackingState.PositionOnly) // if the skeleton is seated
-                        {
-
-                            dc.DrawEllipse(
-                            this.centerPointBrush,
-                            null,
-                            this.SkeletonPointToScreen(skel.Position),
-                            BodyCenterThickness,
-                            BodyCenterThickness);
-                        }
+                       
 
                     }
                 }
-
-
-
-                // prevent drawing outside of our render area
-                //this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
             }
         }
-
 
         /// <summary>
         /// Draws a skeleton's bones and joints
