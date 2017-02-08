@@ -50,9 +50,12 @@ namespace MultiModalMapProject
     // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
     // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     // </copyright>
+
+
+
     partial class MainWindow
     {
-
+        bool move_trigger = false; // implementation of the moving part
         /// <summary>
         /// The microphone client
         /// </summary>
@@ -199,7 +202,8 @@ namespace MultiModalMapProject
                     case LUISIntents.SHOW_ROUTE:// TODO add implementation for this block
                         break;
                     case LUISIntents.ZOOM_IN:
-                        HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_IN);
+                        //HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_IN);
+                        move_trigger = true;
                         break;
                     case LUISIntents.ZOOM_OUT: HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_OUT);
                         break;
