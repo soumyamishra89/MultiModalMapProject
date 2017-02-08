@@ -28,6 +28,7 @@ namespace MultiModalMapProject.Util
 
         // specifies the color to be used to draw route path between two points
         public static Color routePathColor = Colors.Blue;
+        public bool move_trigger = false; // implementation of the moving part
 
         public static Dictionary<string, int> bingPOISearchEntityNameToEntityId = new Dictionary<string, int>();
         static StaticVariables()
