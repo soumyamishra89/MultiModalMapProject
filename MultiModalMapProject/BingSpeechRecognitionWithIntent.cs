@@ -550,7 +550,7 @@ namespace MultiModalMapProject
                 if (e.Recording)
                 {
                     
-                    WriteLine("Please start speaking.");
+                    WriteLine("Please start speaking."); 
                 }
                 
                 // WriteLine();

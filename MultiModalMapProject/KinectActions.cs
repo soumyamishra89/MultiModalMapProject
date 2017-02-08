@@ -529,11 +529,11 @@ namespace MultiModalMapProject
 
 
                                     Joint scaledRight = HandRight.ScaleTo((int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, SkeletonMaxX, SkeletonMaxY);
-                                    Joint scaledLeft = HandLeft.ScaleTo((int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, SkeletonMaxX, SkeletonMaxY);
+                                    //Joint scaledLeft = HandLeft.ScaleTo((int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, SkeletonMaxX, SkeletonMaxY);
 
 
                                     {
-                                        cursorX = (int)(HandRight.Position.X*1000);
+                                        cursorX = (int)(HandRight.Position.X*1200);
                                         //cursorY = (int)(HandRight.Position.Y*100);
                                     }
                                     //cursorX = (int)scaledRight.Position.X;
