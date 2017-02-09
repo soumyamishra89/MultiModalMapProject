@@ -43,9 +43,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Coding4Fun.Kinect.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="KinectControls, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\kinect-controls-master\kinect-controls-master\KinectControls\KinectControls\obj\Debug\KinectControls.dll</HintPath>
+    <Reference Include="KinectControls">
+      <HintPath>lib\KinectControls.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Kinect, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
