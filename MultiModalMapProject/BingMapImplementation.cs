@@ -11,6 +11,7 @@ using System.Runtime.Serialization.Json;
 using System.Windows.Media;
 using MultiModalMapProject.Util;
 using System.Threading;
+using MultiModalMapProject.SpeechUtil;
 
 // This class file contains related to Bing Maps
 namespace MultiModalMapProject
@@ -152,23 +153,10 @@ namespace MultiModalMapProject
             }
         }
 
-        // creates a route option to be used in route request REST api call
-        private RouteOptions getRouteOptions()
-        {
-            return new RouteOptions()
-            {
-                DistanceUnits = StaticVariables.distanceUnits,
-                TravelMode = StaticVariables.travelMode,
-                Optimize = StaticVariables.optimize,
-                RouteAttributes = new List<RouteAttributeType>() { RouteAttributeType.All }
-            };
-
-        }
-
         // creates a route between two points based on the coordinates of the points
         private void getRouteFromCoordinates(Coordinate from, Coordinate to)
         {
-            var routeOption = getRouteOptions();
+            var routeOption = RouteParameters.INSTANCE.getRouteOptions();
             var routeRequest = new RouteRequest()
             {
                 BingMapsKey = StaticVariables.bingMapSessionKey,
@@ -183,7 +171,7 @@ namespace MultiModalMapProject
         // creates a route between two points based on the address of the points
         private void getRouteFromAddress(string from, string to)
         {
-            var routeOption = getRouteOptions();
+            var routeOption = RouteParameters.INSTANCE.getRouteOptions();
             var routeRequest = new RouteRequest()
             {
                 BingMapsKey = StaticVariables.bingMapSessionKey,
@@ -222,8 +210,12 @@ namespace MultiModalMapProject
                         Stroke = new SolidColorBrush(StaticVariables.routePathColor),
                         StrokeThickness = 5
                     };
-                    myMap.Children.Add(routeLine);
-                    myMap.SetView(locs, new Thickness(5), 0);
+                    // adding the route to the map on UI Thread
+                    Dispatcher.Invoke(() =>
+                    {
+                        myMap.Children.Add(routeLine);
+                        myMap.SetView(locs, new Thickness(5), 0);
+                    });
                 }
                 else
                 {

@@ -39,6 +39,13 @@
       <HintPath>..\packages\BingMapsRESTToolkit.1.0.0\lib\net45\BingMapsRESTToolkit.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Coding4Fun.Kinect.Wpf, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Coding4Fun.Kinect.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="KinectControls">
+      <HintPath>lib\KinectControls.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Kinect, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Microsoft.Kinect.dll</HintPath>
@@ -46,6 +53,10 @@
     <Reference Include="Microsoft.Maps.MapControl.WPF, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Microsoft.Maps.MapControl.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Samples.Kinect.WpfViewers, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Microsoft.Samples.Kinect.WpfViewers.dll</HintPath>
     </Reference>
     <Reference Include="SpeechClient, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>..\packages\Microsoft.ProjectOxford.SpeechRecognition-x86.1.0.0.2\lib\SpeechClient.dll</HintPath>
@@ -83,6 +94,8 @@
     <Compile Include="NearbySearch.cs" />
     <Compile Include="SpeechUtil\LuisEntityTypes.cs" />
     <Compile Include="SpeechUtil\LUISIntents.cs" />
+    <Compile Include="SpeechUtil\RouteParameters.cs" />
+    <Compile Include="SpeechUtil\SystemMessages.cs" />
     <Compile Include="Util\BingPOIQueryBuilder.cs" />
     <Compile Include="Util\StaticVariables.cs" />
     <Compile Include="Util\ZoomFlags.cs" />
@@ -129,10 +142,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Resource Include="restaurant.png" />
     <Resource Include="chat.png" />
     <Resource Include="image1.jpg" />
     <Resource Include="image2.jpg" />
+=======
+    <Resource Include="chat.png" />
+>>>>>>> origin/master
     <Content Include="lib\Microsoft.Kinect.dll" />
     <Resource Include="lib\Microsoft.Kinect.xml" />
     <Content Include="lib\Microsoft.Maps.MapControl.WPF.dll" />

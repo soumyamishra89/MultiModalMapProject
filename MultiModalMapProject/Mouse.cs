@@ -7,7 +7,8 @@
 #pragma warning disable 0649
 
 using System;
- 
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.Kinect.Samples.CursorControl
 {
@@ -27,7 +28,7 @@ namespace Microsoft.Kinect.Samples.CursorControl
         public MouseInput MouseInput;
     }
 
-    public static class NativeMethods
+    public static class Mouse
     {
         public const int InputMouse = 0;
 
@@ -82,4 +83,5 @@ namespace Microsoft.Kinect.Samples.CursorControl
         }
     }
 }
+
 

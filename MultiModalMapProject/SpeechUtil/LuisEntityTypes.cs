@@ -13,8 +13,14 @@ namespace MultiModalMapProject.SpeechUtil
         // the predefined entity 'NUMBER' in LUIS system has the this type
         public const string NUMBER = "builtin.number";
 
-        // the type for geographic cities
-        public const string CITY = "builtin.geography.city";
+        // the type for cities, architecture building, places
+        public const string PLACE = "Location";
+
+        // this entity type is used for route finding. To Location
+        public const string TOLOCATION = "Location::toLocation";
+
+        // this entity type is used for route finding. From Location
+        public const string FROMLOCATION = "Location::fromLocation";
 
         // for famous architectural structures the type is this
         public const string ARCHSTRUCTURE = "builtin.encyclopedia.architecture.structure";
