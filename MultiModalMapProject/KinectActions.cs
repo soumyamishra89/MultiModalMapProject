@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace MultiModalMapProject
 {
 
@@ -11,15 +6,11 @@ namespace MultiModalMapProject
     using System.Windows;
     using System.Windows.Media;
     using Microsoft.Kinect;
-    using System.Timers;
     using Coding4Fun.Kinect.Wpf;
-    using Microsoft.Maps.MapControl.WPF;
     using System;
     using System.ComponentModel;
     using System.Runtime.InteropServices;
-    using Nui = Microsoft.Kinect;
-
-    using System.Collections.Generic;
+    
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml

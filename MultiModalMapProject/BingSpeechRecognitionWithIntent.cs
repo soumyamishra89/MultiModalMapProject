@@ -192,24 +192,59 @@ namespace MultiModalMapProject
                 switch (probableIntent.IntentValue.ToUpper())
                 {
                     case LUISIntents.SHOW_LOCATION:
-                        ProcessShowLocationIntent(luisJson);
+                        if (RouteParameters.INSTANCE.isRouteInformationInComplete())
+                        {
+                            ProcessRouteIntent(luisJson, true);
+                        }
+                        else {
+                            // clears the route info in case it is not empty to avoid confusion with Route intent continuation.
+                            // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
+                            RouteParameters.INSTANCE.clear();
+                            ProcessShowLocationIntent(luisJson);
+                        }
                         Trace.WriteLine("LUISIntents.SHOW_ME");
                         break;
                     case LUISIntents.SHOW_NEARBY:
+                        // clears the route info in case it is not empty to avoid confusion with Route intent continuation.
+                        // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
+                        RouteParameters.INSTANCE.clear();
                         ProcessShowNearbyIntent(luisJson);
                         break;
                     case LUISIntents.SHOW_ROUTE:// TODO add implementation for this block
-                        ProcessRouteIntent(luisJson);
+                        ProcessRouteIntent(luisJson, false);
                         break;
                     case LUISIntents.ZOOM_IN:
-                        //HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_IN);
-                         move_trigger = true;
+                        // clears the route info in case it is not empty to avoid confusion with Route intent continuation.
+                        // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
+                        RouteParameters.INSTANCE.clear();
+                        HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_IN);
+                       
                         break;
                     case LUISIntents.ZOOM_OUT:
-                        move_trigger = false;
-                        //HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_OUT);
+                        // clears the route info in case it is not empty to avoid confusion with Route intent continuation.
+                        // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
+                        RouteParameters.INSTANCE.clear();
+                        HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_OUT);
                         break;
-                    case LUISIntents.RESET: resetApplication();
+                    case LUISIntents.PAN:
+                        // clears the route info in case it is not empty to avoid confusion with Route intent continuation.
+                        // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
+                        RouteParameters.INSTANCE.clear();
+
+                        if (move_trigger)
+                        {
+                            move_trigger = false;
+                        }
+                        else
+                        {
+                            move_trigger = true;
+                        }
+                        break;
+                    case LUISIntents.RESET:
+                        // clears the route info in case it is not empty to avoid confusion with Route intent continuation.
+                        // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
+                        RouteParameters.INSTANCE.clear();
+                        resetApplication();
                         break;
                     default: break;
                 }
@@ -404,7 +439,13 @@ namespace MultiModalMapProject
 
         // this function shows the route between two points in the map. The points are identified with entity type toLocation and fromLocation.
         // in case of no 'to' and 'from' location found, the next entity would be abstract location "here" and "there" based on which the route information would be shown
-        private void ProcessRouteIntent(LUISJsonObject luisJson)
+        // Parameters:
+        //   luisJson:
+        //       contains the intent and entity info from Luis.
+        //  isContinuation:
+        //      if true, this method is called as a continuation of previous route info request in case both from and to location info is not provided at one go. 
+        // (this is possible in case of abstract location "here", "there" instead of providing actual location like "berlin", "munich"
+        private void ProcessRouteIntent(LUISJsonObject luisJson, bool isContinuation)
         {
             this.WriteLine("{0}", "------------------ProcessShowRouteIntent------------------:");
             if (luisJson.Entities.Length > 0)
@@ -419,20 +460,62 @@ namespace MultiModalMapProject
                     {
                         RouteParameters.INSTANCE.fromLocation = entity.EntityValue;
                     }
-                }
-                if (RouteParameters.INSTANCE.isRouteInformationInComplete())
-                {
-                    this.Dispatcher.Invoke(() =>
+                    else if (entity.Type.Contains(LuisEntityTypes.ABSTRACTLOCATION))
                     {
+                        // abstract location points to a location on the screen. getLocationFromScreenPoint() gets the location where the kinect hand is pointing on the application.
+                        Microsoft.Maps.MapControl.WPF.Location l = getLocationFromScreenPoint();
+                        // the route information is 
+                        if (isContinuation)
+                        {
+                            RouteParameters.INSTANCE.toCLocation = new Coordinate(l.Latitude, l.Longitude);
+                        }
+                        else {
+                            RouteParameters.INSTANCE.fromCLocation = new Coordinate(l.Latitude, l.Longitude);
+                        }
+                        addPushpinToLocation(l.Latitude, l.Longitude);
+                    }
+                    else if (entity.Type.Contains(LuisEntityTypes.PLACE))
+                    {
+                        if (isContinuation)
+                        {
+                            RouteParameters.INSTANCE.toLocation = entity.EntityValue;
+                        }
+                        else
+                        {
+                            RouteParameters.INSTANCE.fromLocation = entity.EntityValue;
+                        }
+                    }
+                    if (RouteParameters.INSTANCE.isRouteInformationInComplete())
+                    {
+                        this.Dispatcher.Invoke(() =>
+                        {
                         // TODO ask user to provide missing information
                         // set a flag for identifying the continuation of this intent
                         SpeechLabel.Content = RouteParameters.INSTANCE.getMissingInfoMessage();
+                        });
+                        return;
+                    }
+                    // route finding is only done when both to and from addresses are available.
+                    if (RouteParameters.INSTANCE.isRouteInformationComplete())
+                    {
+                        if (RouteParameters.INSTANCE.isAddressAvailable())
+                        {
+                            // showing the route between two points if available
+                            getRouteFromAddress(RouteParameters.INSTANCE.fromLocation, RouteParameters.INSTANCE.toLocation);
+                        }
+                        else {
+                            getRouteFromCoordinates(RouteParameters.INSTANCE.fromCLocation, RouteParameters.INSTANCE.toCLocation);
+                        }
+                    }
+                    this.Dispatcher.Invoke(() =>
+                    {
+                    // TODO ask user to provide missing information
+                    // set a flag for identifying the continuation of this intent
+                    SpeechLabel.Content = RouteParameters.INSTANCE.getTravelingModeChangeMessage();
                     });
                 }
             }
-
         }
-
         // this function handles the zoom intent from the recognised speech. 
         // helps in zoom in or out of the map. 
         // the zoom flag tells if the map is to be zoomed in or zoomed out. 

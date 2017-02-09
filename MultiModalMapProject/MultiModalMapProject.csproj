@@ -91,6 +91,8 @@
     <Compile Include="JsonSchemas\NavteqPoiSchema.cs" />
     <Compile Include="SpeechUtil\LuisEntityTypes.cs" />
     <Compile Include="SpeechUtil\LUISIntents.cs" />
+    <Compile Include="SpeechUtil\RouteParameters.cs" />
+    <Compile Include="SpeechUtil\SystemMessages.cs" />
     <Compile Include="Util\BingPOIQueryBuilder.cs" />
     <Compile Include="Util\StaticVariables.cs" />
     <Compile Include="Util\ZoomFlags.cs" />

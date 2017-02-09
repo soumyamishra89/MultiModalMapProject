@@ -25,7 +25,8 @@ namespace MultiModalMapProject.Util
         public static TravelModeType travelMode = TravelModeType.Driving;
         public static RouteOptimizationType optimize = RouteOptimizationType.TimeWithTraffic;
         /**********************************************************************************************/
-
+        // all the travel mode type available on the map
+        public static readonly string[] travelModeTypes = new string[]{ TravelModeType.Driving.ToString(), TravelModeType.Transit.ToString(), TravelModeType.Walking.ToString() };
         // specifies the color to be used to draw route path between two points
         public static Color routePathColor = Colors.Blue;
         

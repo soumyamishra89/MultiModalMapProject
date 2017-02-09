@@ -14,8 +14,9 @@ namespace MultiModalMapProject.SpeechUtil
         public const string SHOW_NEARBY = "SHOW NEARBY";
         public const string ZOOM_IN = "ZOOM IN";
         public const string ZOOM_OUT = "ZOOM OUT";
-        public const string SHOW_ROUTE = "SHOW ROUTE";
+        public const string SHOW_ROUTE = "ROUTE";
         public const string RESET = "RESET";
         public const string NONE = "NONE";
+        public const string PAN = "PAN";
     }
 }
