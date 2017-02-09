@@ -142,14 +142,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-    <Resource Include="restaurant.png" />
     <Resource Include="chat.png" />
+    <Content Include="lib\Microsoft.Samples.Kinect.WpfViewers.dll" />
+    <Resource Include="restaurant.png" />
     <Resource Include="image1.jpg" />
     <Resource Include="image2.jpg" />
-=======
-    <Resource Include="chat.png" />
->>>>>>> origin/master
+    <Content Include="lib\Coding4Fun.Kinect.Wpf.dll" />
+    <Content Include="lib\KinectControls.dll" />
     <Content Include="lib\Microsoft.Kinect.dll" />
     <Resource Include="lib\Microsoft.Kinect.xml" />
     <Content Include="lib\Microsoft.Maps.MapControl.WPF.dll" />
