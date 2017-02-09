@@ -1,6 +1,6 @@
 ﻿namespace MultiModalMapProject
 {
-    internal class Places
+    internal class NearbySearch
     {
     }
 }

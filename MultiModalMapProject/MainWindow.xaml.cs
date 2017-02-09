@@ -46,11 +46,27 @@ namespace MultiModalMapProject
                 resetMap();
             });
         }
+        
 
         private void listResult()
         {
-            listBox.Items.Add("result1");
-            listBox.Items.Add("result2");
+            //Add value to the listBox
+            listBox.Items.Add(new nearbySearch { Image = "/image1.jpg", TextName = "Restaurant Alpenstuck", TextAddress ="Gartenstrasse 10115 Berlin", TextContact = "030 21751646"});
+            listBox.Items.Add(new nearbySearch { Image = "/image2.jpg", TextName = "Sushi XIV", TextAddress = "Chausseestr. 14 10115 Berlin", TextContact = "030 47599699" });
+
         }
+
+    }
+
+    public class nearbySearch
+    {
+        //Place image
+        public string Image { get; set; }   
+        //Place Name   
+        public string TextName { get; set; }  
+        //Place Address 
+        public string TextAddress { get; set; }   
+        //Place Contact information
+        public string TextContact { get; set; }  
     }
 }

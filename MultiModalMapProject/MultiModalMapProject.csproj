@@ -80,6 +80,7 @@
     <Compile Include="KinectActions.cs" />
     <Compile Include="JsonSchemas\LUISJsonObject.cs" />
     <Compile Include="JsonSchemas\NavteqPoiSchema.cs" />
+    <Compile Include="NearbySearch.cs" />
     <Compile Include="SpeechUtil\LuisEntityTypes.cs" />
     <Compile Include="SpeechUtil\LUISIntents.cs" />
     <Compile Include="Util\BingPOIQueryBuilder.cs" />
@@ -128,7 +129,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-	<Resource Include="chat.png" />
+    <Resource Include="restaurant.png" />
+    <Resource Include="chat.png" />
+    <Resource Include="image1.jpg" />
+    <Resource Include="image2.jpg" />
     <Content Include="lib\Microsoft.Kinect.dll" />
     <Resource Include="lib\Microsoft.Kinect.xml" />
     <Content Include="lib\Microsoft.Maps.MapControl.WPF.dll" />

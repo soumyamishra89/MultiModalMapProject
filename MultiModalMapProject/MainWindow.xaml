@@ -6,9 +6,7 @@
         xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
         xmlns:resx="clr-namespace:MultiModalMapProject.Properties"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:my="clr-namespace:Microsoft.Samples.Kinect.WpfViewers;assembly=Microsoft.Samples.Kinect.WpfViewers"
         Title="MainWindow" Height="735" Width="770" Loaded="WindowLoaded" Closing="WindowClosing">
-
 
     <Grid >
         <Grid.RowDefinitions>
@@ -18,7 +16,33 @@
         
         <m:Map x:Name="myMap" Grid.Row="0"
                CredentialsProvider="0JbzNXxaqJam9uOChVzc~OL4ubOxhmU4QXRlhrkhI3g~Aj-KxTfYO5Xfec0xQ0nXJVLPJeYUeFSIRckkxz6CC0v-A9x_hTobSKLks9Rb6g3F">
-            <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="500" VerticalAlignment="Center" Width="150" Margin="0,10,0.2,-10.4" UseLayoutRounding="True" Panel.ZIndex="2" />
+            <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Center" Width="Auto" Margin="0,10,0.2,-10.4" UseLayoutRounding="True" Panel.ZIndex="2" Foreground="Black" Background="white" BorderBrush="White">
+               
+                    <ListBox.ItemTemplate>
+                    
+                        <DataTemplate>
+                        
+                           <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                               <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                              </Grid.ColumnDefinitions>
+                              
+                              <Image Grid.Row ="1" Grid.Column="0" Source ="{Binding Image}" Margin="2"></Image>
+                              <TextBlock Grid.Row ="1" Grid.Column="1" Text="{Binding TextName}" HorizontalAlignment="Center" VerticalAlignment="Top" TextElement.FontWeight="Bold" TextElement.FontSize="14"  Margin="5"></TextBlock> 
+                              <TextBlock Grid.Row ="1" Grid.Column="1" Text="{Binding TextAddress}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5"></TextBlock>
+                              <TextBlock Grid.Row ="1" Grid.Column="1" Text="{Binding TextContact}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="5"></TextBlock>
+                          
+                        </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+               
+            </ListBox>
         </m:Map>
 
         <Viewbox Grid.Row="0">
@@ -27,7 +51,10 @@
         <!--<TextBlock x:Name="textBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Bottom" Margin="0,0,0,20" Grid.RowSpan="2" Grid.ColumnSpan="2" Panel.ZIndex="3"/>
 -->
         <Border BorderBrush="DarkCyan" BorderThickness="1" Grid.Row="4" >
-        <Label Name="SpeechLabel" Background="White" Content="SpeechLabel" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextElement.FontSize="20" TextElement.FontWeight="Bold" TextElement.FontStyle="Italic" />
+
+            <Label Name="SpeechLabel" Content="SpeechLabel" Background="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextElement.FontSize="20" TextElement.FontWeight="Bold" TextElement.FontStyle="Italic" TextElement.Foreground="{Binding color}">
+               
+            </Label>
         </Border>
     </Grid>
 </Window>
