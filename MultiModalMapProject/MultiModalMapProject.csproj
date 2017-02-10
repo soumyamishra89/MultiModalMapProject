@@ -142,11 +142,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="chat.png" />
+    <Resource Include="Images\chat.png" />
     <Content Include="lib\Microsoft.Samples.Kinect.WpfViewers.dll" />
-    <Resource Include="restaurant.png" />
-    <Resource Include="image1.jpg" />
-    <Resource Include="image2.jpg" />
+    <Resource Include="Images\restaurant.png" />
+    <Resource Include="Images\image1.jpg" />
+    <Resource Include="Images\image2.jpg" />
     <Content Include="lib\Coding4Fun.Kinect.Wpf.dll" />
     <Content Include="lib\KinectControls.dll" />
     <Content Include="lib\Microsoft.Kinect.dll" />

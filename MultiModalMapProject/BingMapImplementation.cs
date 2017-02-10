@@ -203,16 +203,16 @@ namespace MultiModalMapProject
                             locs.Add(new Microsoft.Maps.MapControl.WPF.Location(routePath[i][0], routePath[i][1]));
                         }
                     }
-
-                    MapPolyline routeLine = new MapPolyline()
-                    {
-                        Locations = locs,
-                        Stroke = new SolidColorBrush(StaticVariables.routePathColor),
-                        StrokeThickness = 5
-                    };
-                    // adding the route to the map on UI Thread
                     Dispatcher.Invoke(() =>
                     {
+                        MapPolyline routeLine = new MapPolyline()
+                        {
+                            Locations = locs,
+                            Stroke = new SolidColorBrush(StaticVariables.routePathColor),
+                            StrokeThickness = 5
+                        };
+                        // adding the route to the map on UI Thread
+
                         myMap.Children.Add(routeLine);
                         myMap.SetView(locs, new Thickness(5), 0);
                     });
@@ -262,9 +262,12 @@ namespace MultiModalMapProject
         // adds a pushpin to a location sent to this method
         private void addPushpinToLocation(double latitude, double longitude)
         {
-            Pushpin pushpin = new Pushpin();
-            pushpin.Location = new Microsoft.Maps.MapControl.WPF.Location(latitude, longitude);
-            myMap.Children.Add(pushpin);
+            this.Dispatcher.Invoke(() =>
+            {
+                Pushpin pushpin = new Pushpin();
+                pushpin.Location = new Microsoft.Maps.MapControl.WPF.Location(latitude, longitude);
+                myMap.Children.Add(pushpin);
+            });
         }
 
         // the method gets the location(latitude and longitude) on map based on where the kinect hand (preferrably right hand) is pointing at the map.

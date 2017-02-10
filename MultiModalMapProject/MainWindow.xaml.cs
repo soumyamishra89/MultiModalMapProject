@@ -51,8 +51,8 @@ namespace MultiModalMapProject
         private void listResult()
         {
             //Add value to the listBox
-            listBox.Items.Add(new nearbySearch { Image = "/image1.jpg", TextName = "Restaurant Alpenstuck", TextAddress ="Gartenstrasse 10115 Berlin", TextContact = "030 21751646"});
-            listBox.Items.Add(new nearbySearch { Image = "/image2.jpg", TextName = "Sushi XIV", TextAddress = "Chausseestr. 14 10115 Berlin", TextContact = "030 47599699" });
+            listBox.Items.Add(new nearbySearch { Image = "Images/image1.jpg", TextName = "Restaurant Alpenstuck", TextAddress ="Gartenstrasse 10115 Berlin", TextContact = "030 21751646"});
+            listBox.Items.Add(new nearbySearch { Image = "Images/image2.jpg", TextName = "Sushi XIV", TextAddress = "Chausseestr. 14 10115 Berlin", TextContact = "030 47599699" });
 
         }
 

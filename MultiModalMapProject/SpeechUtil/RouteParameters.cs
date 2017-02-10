@@ -96,7 +96,7 @@ namespace MultiModalMapProject.SpeechUtil
         // checks if all the required information for route finding is avalaible. It returns true when one of them is available only. If both to and from location is empty, then it does not consider the information to be incomplete.
         public bool isRouteInformationInComplete()
         {
-            return ((string.IsNullOrEmpty(toLocation) || toCLocation == null) && (!string.IsNullOrEmpty(fromLocation) || fromCLocation != null)) || ((!string.IsNullOrEmpty(toLocation) || toCLocation != null) && (string.IsNullOrEmpty(fromLocation) || fromCLocation == null));
+            return ((string.IsNullOrEmpty(toLocation)  && (!string.IsNullOrEmpty(fromLocation)) || (fromCLocation != null && toCLocation == null)) || ((!string.IsNullOrEmpty(toLocation) && string.IsNullOrEmpty(fromLocation)) || (fromCLocation == null && toCLocation != null)));
         }
 
         // this tells if all the required field is available for finding route info. 

@@ -289,6 +289,7 @@ namespace MultiModalMapProject
                     this.Dispatcher.Invoke(()=>
                     {
                         addPushpinToLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
+                        setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
                     }
                     );
                 }
@@ -389,6 +390,7 @@ namespace MultiModalMapProject
                         {
                             //  add specific places like coffee, bus stop, bar, based on enity name specified by user
                             addPushPinAtPOI(poiResponse);
+                            setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
                         });
                     }
                     else {
@@ -397,6 +399,7 @@ namespace MultiModalMapProject
                         {
                             // finds all POI at the location
                             addPushPinAtPOI(poiResponse);
+                            setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
                         });
                     }
                 }
@@ -455,10 +458,12 @@ namespace MultiModalMapProject
                     if (entity.Type.Contains(LuisEntityTypes.TOLOCATION))
                     {
                         RouteParameters.INSTANCE.toLocation = entity.EntityValue;
+                        Trace.WriteLine(entity.Type + " : "+RouteParameters.INSTANCE.toLocation);
                     }
                     else if (entity.Type.Contains(LuisEntityTypes.FROMLOCATION))
                     {
                         RouteParameters.INSTANCE.fromLocation = entity.EntityValue;
+                        Trace.WriteLine(entity.Type + " : " + RouteParameters.INSTANCE.fromLocation);
                     }
                     else if (entity.Type.Contains(LuisEntityTypes.ABSTRACTLOCATION))
                     {
@@ -485,35 +490,37 @@ namespace MultiModalMapProject
                             RouteParameters.INSTANCE.fromLocation = entity.EntityValue;
                         }
                     }
-                    if (RouteParameters.INSTANCE.isRouteInformationInComplete())
-                    {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                        // TODO ask user to provide missing information
-                        // set a flag for identifying the continuation of this intent
-                        SpeechLabel.Content = RouteParameters.INSTANCE.getMissingInfoMessage();
-                        });
-                        return;
-                    }
-                    // route finding is only done when both to and from addresses are available.
-                    if (RouteParameters.INSTANCE.isRouteInformationComplete())
-                    {
-                        if (RouteParameters.INSTANCE.isAddressAvailable())
-                        {
-                            // showing the route between two points if available
-                            getRouteFromAddress(RouteParameters.INSTANCE.fromLocation, RouteParameters.INSTANCE.toLocation);
-                        }
-                        else {
-                            getRouteFromCoordinates(RouteParameters.INSTANCE.fromCLocation, RouteParameters.INSTANCE.toCLocation);
-                        }
-                    }
+                }
+                if (RouteParameters.INSTANCE.isRouteInformationInComplete())
+                {
+                    Trace.WriteLine("Soumya : " + RouteParameters.INSTANCE.toLocation + " : " + RouteParameters.INSTANCE.fromLocation);
                     this.Dispatcher.Invoke(() =>
                     {
-                    // TODO ask user to provide missing information
-                    // set a flag for identifying the continuation of this intent
-                    SpeechLabel.Content = RouteParameters.INSTANCE.getTravelingModeChangeMessage();
+                            // TODO ask user to provide missing information
+                            // set a flag for identifying the continuation of this intent
+                            SpeechLabel.Content = RouteParameters.INSTANCE.getMissingInfoMessage();
                     });
+                    return;
                 }
+                // route finding is only done when both to and from addresses are available.
+                if (RouteParameters.INSTANCE.isRouteInformationComplete())
+                {
+                    if (RouteParameters.INSTANCE.isAddressAvailable())
+                    {
+                        // showing the route between two points if available
+                        getRouteFromAddress(RouteParameters.INSTANCE.fromLocation, RouteParameters.INSTANCE.toLocation);
+                    }
+                    else {
+                        getRouteFromCoordinates(RouteParameters.INSTANCE.fromCLocation, RouteParameters.INSTANCE.toCLocation);
+                    }
+                }
+                this.Dispatcher.Invoke(() =>
+                {
+                        // TODO ask user to provide missing information
+                        // set a flag for identifying the continuation of this intent
+                        SpeechLabel.Content = RouteParameters.INSTANCE.getTravelingModeChangeMessage();
+                });
+
             }
         }
         // this function handles the zoom intent from the recognised speech. 
