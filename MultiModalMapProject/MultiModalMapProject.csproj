@@ -66,6 +66,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -143,6 +144,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\chat.png" />
+    <Content Include="cohete.avi" />
+    <Resource Include="Images\move.png" />
+    <Resource Include="Images\zoomin.png" />
+    <Resource Include="Images\zoomout.png" />
     <Content Include="lib\Microsoft.Samples.Kinect.WpfViewers.dll" />
     <Resource Include="Images\restaurant.png" />
     <Resource Include="Images\image1.jpg" />
