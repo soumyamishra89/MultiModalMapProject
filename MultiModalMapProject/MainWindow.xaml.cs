@@ -17,6 +17,8 @@ using System.Windows.Shapes;
 
 namespace MultiModalMapProject
 {
+    
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -38,6 +40,10 @@ namespace MultiModalMapProject
             listResult();
             Instructionpage();
         }
+
+        bool help = true;
+        bool OK = false;
+
 
         // resets the application to its initial state. All the ui elements are set to their initial state.
         private void resetApplication()
@@ -65,6 +71,18 @@ namespace MultiModalMapProject
         
         private void Instructionpage()
         {
+            //TO DO if the user says ok, the instruction page disappears
+            if (OK)  
+            {
+                Instruction_Page.Opacity=0;
+            }
+
+            //TO DO  if the user says "help", the instruction page appears
+            if (help)
+            {
+                Instruction_Page.Opacity = 100;
+            }
+
             Instruction_Page.Items.Add(new information { TextName = "Hello, here are the tasks : "});
             Instruction_Page.Items.Add(new information { TextName = "1. Zoom in : say 'zoom in' or move your hands close", Image3="Images/zoomin.png"});
             Instruction_Page.Items.Add(new information { TextName = "1. Zoom out : say 'zoom out' or move your hands wide", Image3 = "Images/zoomout.png" });

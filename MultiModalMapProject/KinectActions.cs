@@ -8,9 +8,11 @@ namespace MultiModalMapProject
     using Microsoft.Kinect;
     using Coding4Fun.Kinect.Wpf;
     using System;
+    using System.Windows.Forms;
     using System.ComponentModel;
     using System.Runtime.InteropServices;
-    
+    using System.Diagnostics;
+
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -98,9 +100,9 @@ namespace MultiModalMapProject
         int imp_click1 = 0;
         int cursorX = 0;
         int cursorY = 0;
-        bool move_trigger = false; // implementation of the moving part
+        bool move_trigger = true; // implementation of the moving part
 
-        private const float SkeletonMaxX = 0.60f;
+        private const float SkeletonMaxX = 0.90f;
         private const float SkeletonMaxY = 0.40f;
 
         private int counterin = 0;
@@ -162,20 +164,27 @@ namespace MultiModalMapProject
 
         public static class NativeMethods
         {
+
+            public static Microsoft.Maps.MapControl.WPF.Location mapLocBeforeClick;
             public const int InputMouse = 0;
 
-            public const int MouseEventMove = 0x01;
-            public const int MouseEventLeftDown = 0x02;
-            public const int MouseEventLeftUp = 0x04;
+            public const int MouseEventMove = 0x0001;
+            public const int MouseEventLeftDown = 0x0002;
+            public const int MouseEventLeftUp = 0x0004;
             public const int MouseEventRightDown = 0x08;
             public const int MouseEventRightUp = 0x10;
             public const int MouseEventAbsolute = 0x8000;
 
-            private static bool lastLeftDown;
+            public static bool lastLeftDown;
 
             [DllImport("user32.dll", SetLastError = true)]
             private static extern uint SendInput(uint numInputs, Input[] inputs, int size);
 
+            [DllImport("user32.dll")]
+            public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
+
+
+            //public static void SendMouseInput(int positionX, int positionY, int maxX, int maxY, bool leftDown)
             public static void SendMouseInput(int positionX, int positionY, int maxX, int maxY, bool leftDown)
             {
                 if (positionX > int.MaxValue)
@@ -189,6 +198,7 @@ namespace MultiModalMapProject
                 i[0] = new Input();
                 i[0].Type = InputMouse;
                 i[0].MouseInput.X = (positionX * 65535) / maxX;
+                //i[0].MouseInput.X = positionX;
                 i[0].MouseInput.Y = (positionY * 65535) / maxY;
                 i[0].MouseInput.Flags = MouseEventAbsolute | MouseEventMove;
 
@@ -198,20 +208,31 @@ namespace MultiModalMapProject
                 	i[1] = new Input();
                 	i[1].Type = InputMouse;
                 	i[1].MouseInput.Flags = MouseEventLeftDown;
+                    //i[0].MouseInput.X = 0;
+
+                    //mouse_event(MouseEventAbsolute | MouseEventMove | MouseEventLeftDown, i[0].MouseInput.X, i[0].MouseInput.Y, 0, 0);
+                    mouse_event(MouseEventAbsolute | MouseEventMove | MouseEventLeftDown,0, i[0].MouseInput.Y, 0, 0);
+                    lastLeftDown = leftDown;
+                    Trace.WriteLine("mouse click:"+ i[0].MouseInput.X);
+                    return;
                 }
                 else if(lastLeftDown && !leftDown)
                 {
                     i[1] = new Input();
                     i[1].Type = InputMouse;
                     i[1].MouseInput.Flags = MouseEventLeftUp;
+                    mouse_event(MouseEventLeftUp, i[0].MouseInput.X, i[0].MouseInput.Y, 0, 0);
+                    Trace.WriteLine("mouse not click");
+                    lastLeftDown = leftDown;
+                    return;
                 }
 
-                lastLeftDown = leftDown;
-
+                //lastLeftDown = leftDown;
+                mouse_event(MouseEventAbsolute | MouseEventMove, i[0].MouseInput.X, i[0].MouseInput.Y, 0, 0);
                 // send it off
-                uint result = SendInput(2, i, Marshal.SizeOf(i[0]));
-                if (result == 0)
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                //uint result = SendInput(2, i, Marshal.SizeOf(i[0]));
+                //if (result == 0)
+                  //  throw new Win32Exception(Marshal.GetLastWin32Error());
             }
         }
 
@@ -258,6 +279,13 @@ namespace MultiModalMapProject
 
         }
 
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            //PictureBox pb1 = new PictureBox();
+            //pb1.ImageLocation = "C:/Users/Marion/Documents/GitHubMultiModalMapProject/android.jpeg";
+            //pb1.SizeMode = PictureBoxSizeMode.AutoSize;
+        }
         /// <summary>
         /// Execute startup tasks
         /// </summary>
@@ -296,9 +324,10 @@ namespace MultiModalMapProject
                 this.sensor.SkeletonFrameReady += this.SensorSkeletonFrameReady;
 
                 // Start the sensor!
-                try
+                try  
                 {
                     this.sensor.Start();
+    
                 }
                 catch (IOException)
                 {
@@ -308,7 +337,7 @@ namespace MultiModalMapProject
 
             if (null == this.sensor)
             {
-                MessageBox.Show("Kinect Sensor is not Powered");
+                System.Windows.MessageBox.Show("Kinect Sensor is not Powered");
             }
         }
 
@@ -339,6 +368,7 @@ namespace MultiModalMapProject
         /// <param name="e">event arguments</param>
         private void SensorSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
         {
+
 
             Skeleton[] skeletons = new Skeleton[0];
 
@@ -400,9 +430,11 @@ namespace MultiModalMapProject
                                     {
                                         HandRight.Position = joint.Position; // we track the position of the right hand because that's what we are interested in
                                     }
-                                    
 
-                                    if (HandRight.Position.X < (0.1f + head.Position.X) && HandLeft.Position.X > (-0.15f + head.Position.X))  // if the hands are closed on to each other in the center
+                                    // TODO not sure
+                                }
+                            }
+                            if (HandRight.Position.X < (0.1f + head.Position.X) && HandLeft.Position.X > (-0.15f + head.Position.X))  // if the hands are closed on to each other in the center
                                     {
 
 
@@ -524,10 +556,10 @@ namespace MultiModalMapProject
 
 
                                     {
-                                        cursorX = (int)(HandRight.Position.X*1200);
+                                        //cursorX = (int)(HandRight.Position.X*1400);
                                         //cursorY = (int)(HandRight.Position.Y*100);
                                     }
-                                    //cursorX = (int)scaledRight.Position.X;
+                                    cursorX = (int)scaledRight.Position.X;
                                     cursorY = (int)scaledRight.Position.Y;
                                     //NativeMethods.SendMouseInput(cursorX, cursorY, (int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, leftClick);
                                    
@@ -543,8 +575,23 @@ namespace MultiModalMapProject
 
                                     if (move_trigger)
                                     {
+                                        
                                         dc.DrawRectangle(Brushes.Green, null, rec);
-                                        NativeMethods.SendMouseInput(cursorX, cursorY, 1000, 1300, leftClick);
+                                //if (!NativeMethods.lastLeftDown && leftClick)
+                                //{
+                                //    NativeMethods.mapLocBeforeClick = myMap.Center;
+                                //}
+
+                                Trace.WriteLine(leftClick + "" + cursorX + " : " + myMap.Center);
+                                NativeMethods.SendMouseInput(cursorX, cursorY, (int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, leftClick);
+
+                                //if (!NativeMethods.lastLeftDown && leftClick)
+                                //{
+                                //    myMap.Center = NativeMethods.mapLocBeforeClick;
+                                //}
+                                //myMap.SetView(StaticVariables.defaultCenter, 0);
+                                 //NativeMethods.SendMouseInput(cursorX, cursorY, 1000, 1300, leftClick);
+                                Trace.WriteLine(leftClick+ ""+cursorX+" : "+ myMap.Center);
                                         leftClick = true;
 
                                     }
@@ -554,8 +601,8 @@ namespace MultiModalMapProject
 
                                 isZoomedIn = false;
                                 isZoomedOut = false;
-                            }
-                        }
+                          //  }
+                        //}
                        
 
                     }
