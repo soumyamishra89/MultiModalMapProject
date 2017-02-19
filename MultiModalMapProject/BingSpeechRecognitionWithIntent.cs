@@ -192,6 +192,7 @@ namespace MultiModalMapProject
                 switch (probableIntent.IntentValue.ToUpper())
                 {
                     case LUISIntents.SHOW_LOCATION:
+                        hideNearbyPlacesList();
                         if (RouteParameters.INSTANCE.isRouteInformationInComplete())
                         {
                             ProcessRouteIntent(luisJson, true);
@@ -212,9 +213,11 @@ namespace MultiModalMapProject
                         ProcessShowNearbyIntent(luisJson);
                         break;
                     case LUISIntents.SHOW_ROUTE:// TODO add implementation for this block
+                        hideNearbyPlacesList();
                         ProcessRouteIntent(luisJson, false);
                         break;
                     case LUISIntents.ZOOM_IN:
+                        hideNearbyPlacesList();
                         // clears the route info in case it is not empty to avoid confusion with Route intent continuation.
                         // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
                         RouteParameters.INSTANCE.clear();
@@ -222,12 +225,14 @@ namespace MultiModalMapProject
                        
                         break;
                     case LUISIntents.ZOOM_OUT:
+                        hideNearbyPlacesList();
                         // clears the route info in case it is not empty to avoid confusion with Route intent continuation.
                         // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
                         RouteParameters.INSTANCE.clear();
                         HandleZoomMapIntent(luisJson, ZoomFlags.ZOOM_OUT);
                         break;
                     case LUISIntents.PAN:
+                        hideNearbyPlacesList();
                         // clears the route info in case it is not empty to avoid confusion with Route intent continuation.
                         // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
                         RouteParameters.INSTANCE.clear();
@@ -242,12 +247,14 @@ namespace MultiModalMapProject
                         }
                         break;
                     case LUISIntents.RESET:
+                        hideNearbyPlacesList();
                         // clears the route info in case it is not empty to avoid confusion with Route intent continuation.
                         // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
                         RouteParameters.INSTANCE.clear();
                         resetApplication();
                         break;
                     case LUISIntents.INSTRUCTIONS:
+                        hideNearbyPlacesList();
                         // shows or hides the instructions page based on previous state.
                         showOrHideInstructions();
                         break;

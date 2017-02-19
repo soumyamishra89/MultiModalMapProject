@@ -149,6 +149,7 @@
     <Resource Include="Images\zoomin.png" />
     <Resource Include="Images\zoomout.png" />
     <Resource Include="Images\blank.png" />
+    <Resource Include="Images\nopreview.png" />
     <Content Include="lib\Microsoft.Samples.Kinect.WpfViewers.dll" />
     <Resource Include="Images\restaurant.png" />
     <Resource Include="Images\image1.jpg" />
