@@ -377,7 +377,7 @@ namespace MultiModalMapProject
 
                                 // if the hands are closed one to each other, it either means that we start zooming in, or we finish zooming out
 
-                                if (counterout > 7) // if the hands have decreased from wide opened to close to each other 
+                                if (counterout > 7 & !move_trigger) // if the hands have decreased from wide opened to close to each other 
                                                     //&& !isZoomedIn)
                                 {
                                     zoomoutMap(null); // we zoom in
@@ -442,7 +442,7 @@ namespace MultiModalMapProject
                             if (HandRight.Position.X > (0.3f + head.Position.X) && HandLeft.Position.X < (-0.3f + head.Position.X)) // if the hands are wide 
                             {
 
-                                if (counterin > 2)  // if they have been closed before and got wider
+                                if (counterin > 2 & !move_trigger)  // if they have been closed before and got wider
 
                                 {
                                     zoominMap(null); // we zoom in
