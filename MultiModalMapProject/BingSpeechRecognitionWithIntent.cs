@@ -239,6 +239,7 @@ namespace MultiModalMapProject
                         if (move_trigger)
                         {
                             move_trigger = false;
+                            NativeMethods.resetMouseEvents();
                         }
                         else
                         {

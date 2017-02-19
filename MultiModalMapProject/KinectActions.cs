@@ -19,7 +19,7 @@ namespace MultiModalMapProject
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+
         /// <summary>
         /// Width of output drawing : window vertical
         /// </summary>
@@ -114,7 +114,7 @@ namespace MultiModalMapProject
         public Pos HandRightMoveLeft;
         public Pos HandLeftMoveLeft;
 
-        bool leftClick=false;
+        bool leftClick = false;
 
 
         // Create a DrawingVisual that contains a rectangle.
@@ -160,12 +160,12 @@ namespace MultiModalMapProject
 
                 // mouse cursor position relative to the screen
                 int mouseCursorX = (positionX * 65535) / maxX;
-;
+                ;
                 int mouseCursorY = (positionY * 65535) / maxY;
-               
+
 
                 // determine if we need to send a mouse down or mouse up event
-                if(!lastLeftDown && leftDown)
+                if (!lastLeftDown && leftDown)
                 {
                     System.Windows.Input.MouseButtonEventArgs eventArgs = new System.Windows.Input.MouseButtonEventArgs(System.Windows.Input.Mouse.PrimaryDevice, Environment.TickCount, System.Windows.Input.MouseButton.Left) { RoutedEvent = UIElement.MouseLeftButtonDownEvent };
                     // triggers the left click event on the map
@@ -173,28 +173,34 @@ namespace MultiModalMapProject
                     //mouse_event(MouseEventAbsolute | MouseEventMove | MouseEventLeftDown, i[0].MouseInput.X, i[0].MouseInput.Y, 0, 0);
                     //mouse_event(MouseEventAbsolute | MouseEventMove | MouseEventLeftDown, 0, i[0].MouseInput.Y, 0, 0);
                     lastLeftDown = leftDown;
-                   
+
                     return;
                 }
-                else if(lastLeftDown && !leftDown)
+                else if (lastLeftDown && !leftDown)
                 {
-                    mouse_event(MouseEventLeftUp,mouseCursorX, mouseCursorY, 0, 0);
-                   
+                    mouse_event(MouseEventLeftUp, mouseCursorX, mouseCursorY, 0, 0);
+
                     lastLeftDown = leftDown;
                     return;
                 }
 
                 mouse_event(MouseEventAbsolute | MouseEventMove, mouseCursorX, mouseCursorY, 0, 0);
-                
+
+            }
+
+            // resets the mouse event to stop clicking
+            public static void resetMouseEvents()
+            {
+                mouse_event(MouseEventLeftUp, 0, 0, 0, 0);
             }
         }
 
-    /// <summary>
-    /// Draws indicators to show which edges are clipping skeleton data
-    /// </summary>
-    /// <param name="skeleton">skeleton to draw clipping information for</param>
-    /// <param name="drawingContext">drawing context to draw to</param>
-    private static void RenderClippedEdges(Skeleton skeleton, DrawingContext drawingContext)
+        /// <summary>
+        /// Draws indicators to show which edges are clipping skeleton data
+        /// </summary>
+        /// <param name="skeleton">skeleton to draw clipping information for</param>
+        /// <param name="drawingContext">drawing context to draw to</param>
+        private static void RenderClippedEdges(Skeleton skeleton, DrawingContext drawingContext)
         {
             if (skeleton.ClippedEdges.HasFlag(FrameEdges.Bottom))
             {
@@ -245,7 +251,7 @@ namespace MultiModalMapProject
 
             // Display the drawing using our image control
             KinectCanvas.Source = this.imageSource;
-            
+
             // Look through all sensors and start the first connected one.
             // This requires that a Kinect is connected at the time of app startup.
             // To make your app robust against plug/unplug, 
@@ -268,10 +274,10 @@ namespace MultiModalMapProject
                 this.sensor.SkeletonFrameReady += this.SensorSkeletonFrameReady;
 
                 // Start the sensor!
-                try  
+                try
                 {
                     this.sensor.Start();
-    
+
                 }
                 catch (IOException)
                 {
@@ -325,7 +331,7 @@ namespace MultiModalMapProject
                 Joint HandLeft = new Joint();
                 Joint HandRight = new Joint();
                 Rect rec2 = new Rect(0.0, 0.0, 25.0, 25.0);
-                
+
                 if (skeletons.Length != 0)
                 {
                     foreach (Skeleton skel in skeletons)
@@ -362,7 +368,7 @@ namespace MultiModalMapProject
                                     {
                                         HandRight.Position = joint.Position; // we track the position of the right hand because that's what we are interested in
                                     }
-                                    
+
                                 }
                             }
                             if (HandRight.Position.X < (0.1f + head.Position.X) && HandLeft.Position.X > (-0.15f + head.Position.X))  // if the hands are closed on to each other in the center
@@ -540,7 +546,7 @@ namespace MultiModalMapProject
                             kinectHandPositionOnScreen = this.SkeletonPointToScreen(joint.Position);
                         }
                         drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(joint.Position), JointThickness, JointThickness);  // draw everything : needed !
-                        
+
                     }
 
                 }
@@ -556,7 +562,7 @@ namespace MultiModalMapProject
         /// <returns>mapped point</returns>
         private Point SkeletonPointToScreen(SkeletonPoint skelpoint)
         {
-            
+
             // Convert point to depth space.  
             // We are not using depth directly, but we do want the points in our 640x480 output resolution.
             DepthImagePoint depthPoint = this.sensor.CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
