@@ -207,6 +207,7 @@ namespace MultiModalMapProject
                     case LUISIntents.SHOW_NEARBY:
                         // clears the route info in case it is not empty to avoid confusion with Route intent continuation.
                         // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
+                        StaticVariables.POINumber = 1;
                         RouteParameters.INSTANCE.clear();
                         ProcessShowNearbyIntent(luisJson);
                         break;
@@ -245,6 +246,10 @@ namespace MultiModalMapProject
                         // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
                         RouteParameters.INSTANCE.clear();
                         resetApplication();
+                        break;
+                    case LUISIntents.INSTRUCTIONS:
+                        // shows or hides the instructions page based on previous state.
+                        showOrHideInstructions();
                         break;
                     default: break;
                 }
@@ -386,19 +391,21 @@ namespace MultiModalMapProject
                     if (entityId.HasValue)
                     {
                         JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude, new EntityTypeFilter(entityId.Value.ToString()));
+
+                        //  add specific places like coffee, bus stop, bar, based on enity name specified by user
+                        addPushPinAtPOIAndAddtoList(poiResponse);
                         this.Dispatcher.Invoke(() =>
                         {
-                            //  add specific places like coffee, bus stop, bar, based on enity name specified by user
-                            addPushPinAtPOI(poiResponse);
                             setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
                         });
                     }
                     else {
                         JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
+
+                        // finds all POI at the location
+                        addPushPinAtPOIAndAddtoList(poiResponse);
                         this.Dispatcher.Invoke(() =>
                         {
-                            // finds all POI at the location
-                            addPushPinAtPOI(poiResponse);
                             setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
                         });
                     }
@@ -420,11 +427,9 @@ namespace MultiModalMapProject
                         else
                         {
                             JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(myMap.Center.Latitude, myMap.Center.Longitude, new EntityTypeFilter(entityId.Value.ToString()));
-                            this.Dispatcher.Invoke(() =>
-                            {
-                                addPushPinAtPOI(poiResponse);
 
-                            });
+                            addPushPinAtPOIAndAddtoList(poiResponse);
+
                         }
                     }
                 }
@@ -491,37 +496,65 @@ namespace MultiModalMapProject
                         }
                     }
                 }
-                if (RouteParameters.INSTANCE.isRouteInformationInComplete())
-                {
-                    Trace.WriteLine("Soumya : " + RouteParameters.INSTANCE.toLocation + " : " + RouteParameters.INSTANCE.fromLocation);
-                    this.Dispatcher.Invoke(() =>
-                    {
-                            // TODO ask user to provide missing information
-                            // set a flag for identifying the continuation of this intent
-                            SpeechLabel.Content = RouteParameters.INSTANCE.getMissingInfoMessage();
-                    });
-                    return;
-                }
-                // route finding is only done when both to and from addresses are available.
-                if (RouteParameters.INSTANCE.isRouteInformationComplete())
-                {
-                    if (RouteParameters.INSTANCE.isAddressAvailable())
-                    {
-                        // showing the route between two points if available
-                        getRouteFromAddress(RouteParameters.INSTANCE.fromLocation, RouteParameters.INSTANCE.toLocation);
-                    }
-                    else {
-                        getRouteFromCoordinates(RouteParameters.INSTANCE.fromCLocation, RouteParameters.INSTANCE.toCLocation);
-                    }
-                }
+                // shows the route info if all the necessary input is available
+                showRoute();
+            }
+        }
+
+        // shows the route for the RouteParameters
+        private void showRoute()
+        {
+            if (RouteParameters.INSTANCE.isRouteInformationInComplete())
+            {
+                Trace.WriteLine("Soumya : " + RouteParameters.INSTANCE.toLocation + " : " + RouteParameters.INSTANCE.fromLocation);
                 this.Dispatcher.Invoke(() =>
                 {
-                        // TODO ask user to provide missing information
-                        // set a flag for identifying the continuation of this intent
-                        SpeechLabel.Content = RouteParameters.INSTANCE.getTravelingModeChangeMessage();
+                    // TODO ask user to provide missing information
+                    // set a flag for identifying the continuation of this intent
+                    SpeechLabel.Content = RouteParameters.INSTANCE.getMissingInfoMessage();
                 });
-
+                return;
             }
+            // route finding is only done when both to and from addresses are available.
+            if (RouteParameters.INSTANCE.isRouteInformationComplete())
+            {
+                if (RouteParameters.INSTANCE.isAddressAvailable())
+                {
+                    // showing the route between two points if available
+                    getRouteFromAddress(RouteParameters.INSTANCE.fromLocation, RouteParameters.INSTANCE.toLocation);
+                }
+                else {
+                    getRouteFromCoordinates(RouteParameters.INSTANCE.fromCLocation, RouteParameters.INSTANCE.toCLocation);
+                }
+            }
+            this.Dispatcher.Invoke(() =>
+            {
+                // TODO ask user to provide missing information
+                // set a flag for identifying the continuation of this intent
+                SpeechLabel.Content = RouteParameters.INSTANCE.getTravelingModeChangeMessage();
+            });
+        }
+
+        // changes the travel mode type for route finding and reroutes the map
+        private void ProcessTravelModeIntent(LUISJsonObject luisJson)
+        {
+            this.WriteLine("{0}", "------------------ProcessShowRouteIntent------------------:");
+            // the travel mode can be Walking, Driving or Transit. checking for this value in the intent query
+            if (luisJson.Query.ToLower().Contains("drive") || luisJson.Query.ToLower().Contains("driving"))
+            {
+                RouteParameters.INSTANCE.travelMode = TravelModeType.Driving;
+            }
+            else if (luisJson.Query.ToLower().Contains("walk") || luisJson.Query.ToLower().Contains("walking"))
+            {
+                RouteParameters.INSTANCE.travelMode = TravelModeType.Walking;
+            }
+            else if (luisJson.Query.ToLower().Contains("transit"))
+            {
+                RouteParameters.INSTANCE.travelMode = TravelModeType.Transit;
+            }
+            // shows the route info if all the necessary input is available
+            showRoute();
+
         }
         // this function handles the zoom intent from the recognised speech. 
         // helps in zoom in or out of the map. 
@@ -623,7 +656,9 @@ namespace MultiModalMapProject
             this.WriteLine("--- Error received by OnConversationErrorHandler() ---");
             this.WriteLine("Error code: {0}", e.SpeechErrorCode.ToString());
             this.WriteLine("Error text: {0}", e.SpeechErrorText);
-            this.micClient.StartMicAndRecognition();
+
+            //this.micClient.StartMicAndRecognition();
+
             // this.WriteLine();
         }
         /// <summary>

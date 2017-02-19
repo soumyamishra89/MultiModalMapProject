@@ -17,7 +17,7 @@
         
         <m:Map x:Name="myMap" Grid.Row="0"
                CredentialsProvider="0JbzNXxaqJam9uOChVzc~OL4ubOxhmU4QXRlhrkhI3g~Aj-KxTfYO5Xfec0xQ0nXJVLPJeYUeFSIRckkxz6CC0v-A9x_hTobSKLks9Rb6g3F">
-            <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Center" Width="Auto" Margin="0,10,0.2,-10.4" UseLayoutRounding="True" Panel.ZIndex="2" Foreground="Black" Background="white" BorderBrush="White">
+            <ListBox x:Name="nearbyPlacesList" HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Center" Width="Auto" Margin="0,10,0.2,-10.4" UseLayoutRounding="True" Panel.ZIndex="2" Foreground="Black" Background="white" BorderBrush="White" Visibility="Hidden">
                
                     <ListBox.ItemTemplate>
                     
@@ -47,35 +47,33 @@
                
             </ListBox>
 
-
-            <ListBox x:Name="Instruction_Page" HorizontalAlignment="Left" Height="735" VerticalAlignment="Center" Width="770" Margin="0,0,0,0" UseLayoutRounding="True" Panel.ZIndex="2" Foreground="Black" Background="white" BorderBrush="White">
-
-                <ListBox.ItemTemplate>
-
-                    <DataTemplate>
-
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-
-                            <Image Grid.Row ="1" Grid.Column="0" Source ="{Binding Image}" Margin="2"></Image>
-                            <TextBlock Grid.Row ="1" Grid.Column="0" Text="{Binding TextName}" HorizontalAlignment="Center" VerticalAlignment="Top" TextElement.FontWeight="Bold" TextElement.FontSize="14"  Margin="5"></TextBlock>
-                            <Image Grid.Row ="1" Grid.Column="1" Source ="{Binding Image2}" Margin="0" HorizontalAlignment="Right"></Image>
-                            <Image Grid.Row ="1" Grid.Column="1" Source ="{Binding Image3}" Margin="0" HorizontalAlignment="Right"></Image>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-
-            </ListBox>
         </m:Map>
+        <ListBox x:Name="Instruction_Page" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" UseLayoutRounding="True" Panel.ZIndex="2" Foreground="Black" Background="white" BorderBrush="White" Focusable="False">
 
+            <ListBox.ItemTemplate>
+
+                <DataTemplate>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+
+                        <TextBlock Grid.Row ="1" Grid.Column="0" Text="{Binding TextName}" HorizontalAlignment="Center" VerticalAlignment="Top" TextElement.FontWeight="Bold" TextElement.FontSize="14"  Margin="5"></TextBlock>
+
+                        <Image Grid.Row ="1" Grid.Column="1" Source ="{Binding Image}" Margin="0" HorizontalAlignment="Right"></Image>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
         <Viewbox Grid.Row="0">
             <Image Name="KinectCanvas"/>
         </Viewbox>

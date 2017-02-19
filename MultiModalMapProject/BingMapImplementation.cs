@@ -12,6 +12,11 @@ using System.Windows.Media;
 using MultiModalMapProject.Util;
 using System.Threading;
 using MultiModalMapProject.SpeechUtil;
+using System.Windows.Media.Imaging;
+using System.Diagnostics;
+using System.IO;
+using System.Configuration;
+using MultiModalMapProject.JsonSchemas.NavteqPoiSchema;
 
 // This class file contains related to Bing Maps
 namespace MultiModalMapProject
@@ -23,7 +28,7 @@ namespace MultiModalMapProject
         // position of the kinect hand (preferrably right hand)  on the screen relative to the UIElement on which it is drawn
         System.Windows.Point kinectHandPositionOnScreen = new System.Windows.Point();
 
-        
+
         LocationConverter locConv = new LocationConverter();
 
         // sets default parameters to map and initialises map components if necessary
@@ -52,7 +57,7 @@ namespace MultiModalMapProject
                                                                                               //{
                                                                                               //  myMap.ZoomLevel = distance_between_hands * zoomScalingValue;
                                                                                               //}
-            
+
         }
         // Summary:
         //      zooms in the map by the zoominFactor.
@@ -124,13 +129,14 @@ namespace MultiModalMapProject
             using (var stream = await response.Content.ReadAsStreamAsync())
             {
                 DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(T));
-                 
+
                 return (T)ser.ReadObject(stream);
             }
         }
 
-        // adds pushpins for the POI locations. The pusphins can be customised depending on the place
-        private void addPushPinAtPOI(JsonSchemas.NavteqPoiSchema.Response response)
+        // adds pushpins for the POI locations. The pusphins can be customised depending on the place.
+        // the method also adds poi info to the listview
+        private async void addPushPinAtPOIAndAddtoList(JsonSchemas.NavteqPoiSchema.Response response)
         {
             if (response != null && response.ResultSet != null &&
                                        response.ResultSet.Results != null &&
@@ -139,19 +145,29 @@ namespace MultiModalMapProject
                 myMap.Children.Clear();
                 foreach (var poi in response.ResultSet.Results)
                 {
-                    var loc = new Microsoft.Maps.MapControl.WPF.Location(poi.Latitude, poi.Longitude);
-                    var pin = new Pushpin();
-                    pin.Tag = poi;
-                    pin.Location = loc;
-                    myMap.Children.Add(pin);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        var loc = new Microsoft.Maps.MapControl.WPF.Location(poi.Latitude, poi.Longitude);
+                        var pin = new Pushpin();
+                        pin.Tag = poi;
+                        pin.Name = "" + StaticVariables.POINumber;
+                        pin.Location = loc;
+                        myMap.Children.Add(pin);
+                    });
+                    BitmapImage poiImage = await getImageryOfPOI(new Coordinate(poi.Latitude, poi.Longitude));
+                    
+                    addPOIToListView(poiImage, poi, StaticVariables.POINumber);
                 }
+                nearbyPlacesList.Visibility = Visibility.Visible;
             }
+
             else
             {
                 // TODO meesage to display on map
                 System.Diagnostics.Trace.WriteLine("No result");
             }
         }
+
 
         // creates a route between two points based on the coordinates of the points
         private void getRouteFromCoordinates(Coordinate from, Coordinate to)
@@ -234,7 +250,7 @@ namespace MultiModalMapProject
         {
             T result = null;
             var response = await ServiceManager.GetResponseAsync(request);
-            if (response != null && response.ResourceSets != null && response.ResourceSets.Length > 0 
+            if (response != null && response.ResourceSets != null && response.ResourceSets.Length > 0
                 && response.ResourceSets[0].Resources != null && response.ResourceSets[0].Resources.Length > 0)
             {
                 // result from Route Request is contained in BingMapsRESTToolkit.Route
@@ -257,7 +273,7 @@ namespace MultiModalMapProject
             pushpin.Location = l;
             myMap.Children.Add(pushpin);
         }
-        
+
 
         // adds a pushpin to a location sent to this method
         private void addPushpinToLocation(double latitude, double longitude)
@@ -285,7 +301,7 @@ namespace MultiModalMapProject
         private async void addPOIToMapFromKinectHandPosition(params BingQueryFilters.BingQueryFilter[] queryFilters)
         {
             Microsoft.Maps.MapControl.WPF.Location handLocation = getLocationFromScreenPoint();
-           
+
             // returns a NavteqPoiSchema.Response containing details of the POI nearby the location. 
             var pois = await getPOIForLocation(handLocation.Latitude, handLocation.Longitude, queryFilters);
 
@@ -358,7 +374,7 @@ namespace MultiModalMapProject
         // zoom in on the map at the place where the kinect is pointing
         private void zoominMapAtKinectHandLocation(int? zoominFactor)
         {
-            double zoomLevel = myMap.ZoomLevel+StaticVariables.zoominFactor;
+            double zoomLevel = myMap.ZoomLevel + StaticVariables.zoominFactor;
             if (zoominFactor.HasValue)
                 zoomLevel = myMap.ZoomLevel + zoominFactor.Value;
 
@@ -375,6 +391,42 @@ namespace MultiModalMapProject
             myMap.SetView(getLocationFromScreenPoint(), zoomLevel);
         }
 
-    }
+        // this method gets the image of a location at a particular zoom level
+        private async Task<BitmapImage> getImageryOfPOI(Coordinate centerPoint)
+        {
+            var imageRequest = new ImageryRequest()
+            {
+                CenterPoint = centerPoint,
+                ZoomLevel = 20,
+                ImagerySet = ImageryType.Aerial,
+               BingMapsKey = StaticVariables.bingMapSessionKey,
+            };
+           
+            var bitmapImage = new BitmapImage();
+            using (var imageStream = await ServiceManager.GetImageAsync(imageRequest))
+            {
+                try {
+                    bitmapImage.BeginInit();
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.DecodePixelHeight = StaticVariables.imageHeight;
+                    bitmapImage.DecodePixelWidth = StaticVariables.imageWidth;
+                    bitmapImage.StreamSource = imageStream;
+                    bitmapImage.EndInit();
+                }
+                catch(Exception)
+                {
+                    // in case of no image available from bing map, a default image is loaded
+                    FileStream fileStream =  new FileStream("Images/nopreview.png", FileMode.Open, FileAccess.Read);
+                    bitmapImage.BeginInit();
+                    bitmapImage.StreamSource = fileStream;
+                    bitmapImage.EndInit();
+                }
 
+            }
+            
+            return bitmapImage;
+        }
+        
+    }
+    
 }

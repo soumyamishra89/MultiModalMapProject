@@ -32,6 +32,11 @@ namespace MultiModalMapProject.Util
         
 
         public static Dictionary<string, int> bingPOISearchEntityNameToEntityId = new Dictionary<string, int>();
+        internal static int imageHeight = 40;
+        internal static int imageWidth = 40;
+
+        public static int POINumber = 1;
+
         static StaticVariables()
         {
             

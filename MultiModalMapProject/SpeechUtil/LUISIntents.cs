@@ -18,5 +18,6 @@ namespace MultiModalMapProject.SpeechUtil
         public const string RESET = "RESET";
         public const string NONE = "NONE";
         public const string PAN = "PAN";
+        public const string INSTRUCTIONS = "INSTRUCTIONS";
     }
 }
