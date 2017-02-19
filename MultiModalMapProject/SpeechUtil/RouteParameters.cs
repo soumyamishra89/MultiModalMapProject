@@ -39,7 +39,7 @@ namespace MultiModalMapProject.SpeechUtil
         }
 
         // sets the default values of the parameters
-        public void clear()
+        internal void clear()
         {
             this.toCLocation = null;
             this.fromCLocation = null;
@@ -51,7 +51,7 @@ namespace MultiModalMapProject.SpeechUtil
         }
 
         // creates a route option to be used in route request REST api call
-        public RouteOptions getRouteOptions()
+        internal RouteOptions getRouteOptions()
         {
             return new RouteOptions()
             {
@@ -63,7 +63,7 @@ namespace MultiModalMapProject.SpeechUtil
 
         }
         
-        public string getMissingInfoMessage()
+        internal string getMissingInfoMessage()
         {
             // if only one of the location is avaliable, then the system can prompt the user to provide the other location
             if (isRouteInformationInComplete())
@@ -83,18 +83,18 @@ namespace MultiModalMapProject.SpeechUtil
         // this method tells if the address is available. 
         // this method is used when isRouteInformationInComplete() returns true. 
         // this helps in knowing if to and from location is available as string or as coordinates
-        public Boolean isAddressAvailable()
+        internal Boolean isAddressAvailable()
         {
             return !string.IsNullOrEmpty(fromLocation) && !string.IsNullOrEmpty(toLocation);
         }
 
-        internal object getTravelingModeChangeMessage()
+        internal string getTravelingModeChangeMessage()
         {
             return string.Format(SystemMessages.CHANGE_TRAVELMODE, StaticVariables.travelModeTypes);
         }
 
         // checks if all the required information for route finding is avalaible. It returns true when one of them is available only. If both to and from location is empty, then it does not consider the information to be incomplete.
-        public bool isRouteInformationInComplete()
+        internal bool isRouteInformationInComplete()
         {
             return ((string.IsNullOrEmpty(toLocation)  && (!string.IsNullOrEmpty(fromLocation)) || (fromCLocation != null && toCLocation == null)) || ((!string.IsNullOrEmpty(toLocation) && string.IsNullOrEmpty(fromLocation)) || (fromCLocation == null && toCLocation != null)));
         }

@@ -181,10 +181,9 @@ namespace MultiModalMapProject
         private void identifyIntentAndPerformAction(LUISJsonObject luisJson)
         {
             // shows the recognised speech on application label.
-            this.Dispatcher.Invoke(() =>
-            {
-                SpeechLabel.Content = luisJson.Query;
-            });
+
+            setUserRecognisedSpeechText(luisJson.Query);
+          
             if (luisJson.Intents.Length > 0)
             {
                 // the json result from LUIS returns intent with highest probability as the first result.
@@ -301,7 +300,7 @@ namespace MultiModalMapProject
                     this.Dispatcher.Invoke(()=>
                     {
                         addPushpinToLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
-                        setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
+                        setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude, myMap.ZoomLevel);
                     }
                     );
                 }
@@ -317,7 +316,6 @@ namespace MultiModalMapProject
             {
                 this.Dispatcher.Invoke(() =>
                 {
-                    Trace.WriteLine("Inside ProcessShowMeIntent: ShowLocationOfKinectHandPoint");
                     ShowLocationOfKinectHandPoint();
                 });
             }
@@ -389,7 +387,7 @@ namespace MultiModalMapProject
                         // TODO entity name cannot be recognised error message
                         return;
                     }
-                    Trace.WriteLine("Inside ProcessShowMeIntent");
+                   
                 }
 
                 // adds POI at the location
@@ -403,7 +401,8 @@ namespace MultiModalMapProject
                         addPushPinAtPOIAndAddtoList(poiResponse);
                         this.Dispatcher.Invoke(() =>
                         {
-                            setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
+                            setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude, 14);
+
                         });
                     }
                     else {
@@ -413,7 +412,7 @@ namespace MultiModalMapProject
                         addPushPinAtPOIAndAddtoList(poiResponse);
                         this.Dispatcher.Invoke(() =>
                         {
-                            setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
+                            setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude, 14);
                         });
                     }
                 }
@@ -509,37 +508,33 @@ namespace MultiModalMapProject
         }
 
         // shows the route for the RouteParameters
-        private void showRoute()
+        private async void showRoute()
         {
             if (RouteParameters.INSTANCE.isRouteInformationInComplete())
             {
                 Trace.WriteLine("Soumya : " + RouteParameters.INSTANCE.toLocation + " : " + RouteParameters.INSTANCE.fromLocation);
-                this.Dispatcher.Invoke(() =>
-                {
-                    // TODO ask user to provide missing information
-                    // set a flag for identifying the continuation of this intent
-                    SpeechLabel.Content = RouteParameters.INSTANCE.getMissingInfoMessage();
-                });
+                // set a flag for identifying the continuation of this intent
+                setSystemMessagesToSpeechLabel(RouteParameters.INSTANCE.getMissingInfoMessage());
+
                 return;
             }
+            Boolean isRouteAvailable = false;
             // route finding is only done when both to and from addresses are available.
             if (RouteParameters.INSTANCE.isRouteInformationComplete())
             {
                 if (RouteParameters.INSTANCE.isAddressAvailable())
                 {
                     // showing the route between two points if available
-                    getRouteFromAddress(RouteParameters.INSTANCE.fromLocation, RouteParameters.INSTANCE.toLocation);
+                    isRouteAvailable = await getRouteFromAddress(RouteParameters.INSTANCE.fromLocation, RouteParameters.INSTANCE.toLocation);
                 }
                 else {
-                    getRouteFromCoordinates(RouteParameters.INSTANCE.fromCLocation, RouteParameters.INSTANCE.toCLocation);
+                    isRouteAvailable = await getRouteFromCoordinates(RouteParameters.INSTANCE.fromCLocation, RouteParameters.INSTANCE.toCLocation);
                 }
             }
-            this.Dispatcher.Invoke(() =>
-            {
-                // TODO ask user to provide missing information
-                // set a flag for identifying the continuation of this intent
-                SpeechLabel.Content = RouteParameters.INSTANCE.getTravelingModeChangeMessage();
-            });
+            if (isRouteAvailable)
+                // shows further action possible with this intent if route is available
+                setSystemMessagesToSpeechLabel(RouteParameters.INSTANCE.getTravelingModeChangeMessage());
+
         }
 
         // changes the travel mode type for route finding and reroutes the map

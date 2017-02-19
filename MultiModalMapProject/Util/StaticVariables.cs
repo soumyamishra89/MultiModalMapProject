@@ -15,7 +15,7 @@ namespace MultiModalMapProject.Util
         // default values for zooming out the map based on hand gesture and speech command
         public static int zoomoutFactor = 2;
         // Due to some alignment problem, the Y coordinate is shifted. Hence this offset tries to place the point exactly on the kinect hand position
-        public static double handPointOffsetY = 300;
+        public static double handPointOffsetY = 25;
 
         public static Microsoft.Maps.MapControl.WPF.Location defaultCenter = new Microsoft.Maps.MapControl.WPF.Location(52.50141, 13.40233);
 
@@ -32,8 +32,8 @@ namespace MultiModalMapProject.Util
         
 
         public static Dictionary<string, int> bingPOISearchEntityNameToEntityId = new Dictionary<string, int>();
-        internal static int imageHeight = 40;
-        internal static int imageWidth = 40;
+        internal static int imageHeight = 60;
+        internal static int imageWidth = 60;
 
         public static int POINumber = 1;
 

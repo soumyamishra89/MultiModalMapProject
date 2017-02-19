@@ -1,7 +1,9 @@
-﻿using MultiModalMapProject.JsonSchemas.NavteqPoiSchema;
+﻿using Microsoft.Maps.MapControl.WPF;
+using MultiModalMapProject.JsonSchemas.NavteqPoiSchema;
 using MultiModalMapProject.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -25,8 +27,16 @@ namespace MultiModalMapProject
     /// </summary>
     public partial class MainWindow : Window
     {
+        static Map thisMap;
+        private SolidColorBrush systemMessageBrush = (SolidColorBrush)new BrushConverter().ConvertFrom("#41BDF2");
+        private SolidColorBrush speechWhiteBackgroundBrush = new SolidColorBrush(Colors.White);
+        private SolidColorBrush speechWarningBackgroundBrush = (SolidColorBrush)new BrushConverter().ConvertFrom("#FFDC17");
+        private SolidColorBrush speechUserMessageBrush = new SolidColorBrush(Colors.Black);
+        private SolidColorBrush systemWarningMessageBrush = new SolidColorBrush(Colors.Maroon);
+
         public MainWindow()
         {
+           
             // sets the current culture to US
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             // sets the default culture of all threads to US-en
@@ -38,8 +48,9 @@ namespace MultiModalMapProject
             InitialiseBingSpeechComponents();
 
             listMenu();
-            listResult();
+            //listResult();
             Instructionpage();
+            thisMap = myMap;
         }
 
         bool instructionsShown = true;
@@ -56,15 +67,29 @@ namespace MultiModalMapProject
 
         private void listMenu()
         {
-            listBox.Items.Add(new NearbySearchMenu { TextCategory = "Restaurants", MenuTextColor = "purple" });
+            nearbyPlacesList.Items.Add(new NearbySearchMenu { TextCategory = "Restaurants", MenuTextColor = "purple" });
+           
         }
 
 
         private void listResult()
         {
+            BitmapImage bitmapImage1 = new BitmapImage();
+
+                        FileStream fileStream = new FileStream("../../Images/image1.jpg", FileMode.Open, FileAccess.Read);
+
+            bitmapImage1.BeginInit();
+            bitmapImage1.StreamSource = fileStream;
+            bitmapImage1.EndInit();
+            BitmapImage bitmapImage2 = new BitmapImage();
+            FileStream fileStream2 = new FileStream("../../Images/image2.jpg", FileMode.Open, FileAccess.Read);
+
+            bitmapImage2.BeginInit();
+            bitmapImage2.StreamSource = fileStream2;
+            bitmapImage2.EndInit();
             //Add value to the listBox
-           // listBox.Items.Add(new NearbySearch { Image = "Images/image1.jpg", TextName = "Restaurant Alpenstuck", TextAddress ="Gartenstrasse 10115 Berlin", TextContact = "030 21751646"});
-          //  listBox.Items.Add(new NearbySearch { Image = "Images/image2.jpg", TextName = "Sushi XIV", TextAddress = "Chausseestr. 14 10115 Berlin", TextContact = "030 47599699" });
+            nearbyPlacesList.Items.Add(new NearbySearch { Image = bitmapImage1, TextName = "Restaurant Alpenstuck", TextAddress ="Gartenstrasse 10115 Berlin", TextContact = "030 21751646"});
+            nearbyPlacesList.Items.Add(new NearbySearch { Image = bitmapImage2, TextName = "Sushi XIV", TextAddress = "Chausseestr. 14 10115 Berlin", TextContact = "030 47599699" });
 
         }
 
@@ -114,10 +139,45 @@ namespace MultiModalMapProject
             });
         }
 
+        // sets the message from system (asking for more information) in cyan color
+        private void setSystemMessagesToSpeechLabel(string message)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                SpeechLabel.Foreground = systemMessageBrush;
+                SpeechLabel.Background = speechWhiteBackgroundBrush;
+                SpeechLabel.Content = message;
+            });
+        }
+
+        // sets the message from system (asking for more information) in cyan color
+        private void setSystemWarningMessagesToSpeechLabel(string message)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                SpeechLabel.Foreground = systemWarningMessageBrush;
+                SpeechLabel.Background = speechWarningBackgroundBrush;
+                SpeechLabel.Content = message;
+            });
+        }
+        // sets the detected message from users in black color
+        private void setUserRecognisedSpeechText(string message)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                SpeechLabel.Background = speechWhiteBackgroundBrush;
+                SpeechLabel.Foreground = speechUserMessageBrush;
+                SpeechLabel.Content = message;
+            });
+        }
+
         // hides the nearby search listbox
         private void hideNearbyPlacesList()
         {
-            nearbyPlacesList.Visibility = Visibility.Hidden;
+            this.Dispatcher.Invoke(() =>
+            {
+                nearbyPlacesList.Visibility = Visibility.Hidden;
+            });
         }
         public class NearbySearchMenu
         {

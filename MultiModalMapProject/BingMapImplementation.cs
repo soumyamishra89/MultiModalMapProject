@@ -41,24 +41,7 @@ namespace MultiModalMapProject
                 StaticVariables.bingMapSessionKey = c.ApplicationId;
             });
         }
-
-        // TODO to be removed
-        private int zoomScalingValue = 19;
-        // TODO to be removed
-        // scales the increasing or decreasing distance between the hands to zoom in and zoom out respectively
-        private void zoomInZoomOutMap(Joint leftHand, Joint rightHand)
-        {
-            double distance_between_hands = Math.Sqrt(Math.Pow(leftHand.Position.X - rightHand.Position.X, 2) + Math.Pow(leftHand.Position.Y - rightHand.Position.Y, 2));
-            // leftHandY.Add(distance_between_hands * 19);
-
-            int distance_in_integer = Convert.ToInt32(distance_between_hands * zoomScalingValue);
-            Console.WriteLine("Distance between left and right hand: " + distance_in_integer);// if(distance_between_hands)
-                                                                                              //if (distance_in_integer != referenceDistanceBetweenHands)
-                                                                                              //{
-                                                                                              //  myMap.ZoomLevel = distance_between_hands * zoomScalingValue;
-                                                                                              //}
-
-        }
+        
         // Summary:
         //      zooms in the map by the zoominFactor.
         //      zoomInFactor is nullable. In case a null value is sent, then the zoomin is done by a default value.
@@ -116,7 +99,7 @@ namespace MultiModalMapProject
             filters.Insert(0, new BingQueryFilters.SpatialFilter(latitude, longitude, StaticVariables.defaultSearchRadius));
 
             string query = BingPOIQueryBuilder.buildPOIQuery(longitude, filters);
-            System.Diagnostics.Trace.WriteLine(query);
+            Trace.WriteLine(query);
             return await GetResponse<JsonSchemas.NavteqPoiSchema.Response>(new Uri(query));
         }
 
@@ -142,7 +125,11 @@ namespace MultiModalMapProject
                                        response.ResultSet.Results != null &&
                                        response.ResultSet.Results.Length > 0)
             {
-                myMap.Children.Clear();
+                this.Dispatcher.Invoke(() =>
+                {
+                    myMap.Children.Clear();
+                    nearbyPlacesList.Visibility = Visibility.Visible;
+                });
                 foreach (var poi in response.ResultSet.Results)
                 {
                     this.Dispatcher.Invoke(() =>
@@ -150,15 +137,16 @@ namespace MultiModalMapProject
                         var loc = new Microsoft.Maps.MapControl.WPF.Location(poi.Latitude, poi.Longitude);
                         var pin = new Pushpin();
                         pin.Tag = poi;
-                        pin.Name = "" + StaticVariables.POINumber;
+                        pin.Content = "" + StaticVariables.POINumber;
                         pin.Location = loc;
                         myMap.Children.Add(pin);
+                       
                     });
                     BitmapImage poiImage = await getImageryOfPOI(new Coordinate(poi.Latitude, poi.Longitude));
-                    
-                    addPOIToListView(poiImage, poi, StaticVariables.POINumber);
+
+                    addPOIToListView(poiImage, poi, StaticVariables.POINumber++);
                 }
-                nearbyPlacesList.Visibility = Visibility.Visible;
+               
             }
 
             else
@@ -170,7 +158,7 @@ namespace MultiModalMapProject
 
 
         // creates a route between two points based on the coordinates of the points
-        private void getRouteFromCoordinates(Coordinate from, Coordinate to)
+        private async Task<Boolean> getRouteFromCoordinates(Coordinate from, Coordinate to)
         {
             var routeOption = RouteParameters.INSTANCE.getRouteOptions();
             var routeRequest = new RouteRequest()
@@ -181,11 +169,11 @@ namespace MultiModalMapProject
             };
 
             // processes the request and creates route accordingly
-            getRoute(routeRequest);
+            return await getRoute(routeRequest);
         }
 
         // creates a route between two points based on the address of the points
-        private void getRouteFromAddress(string from, string to)
+        private async Task<Boolean> getRouteFromAddress(string from, string to)
         {
             var routeOption = RouteParameters.INSTANCE.getRouteOptions();
             var routeRequest = new RouteRequest()
@@ -195,11 +183,11 @@ namespace MultiModalMapProject
                 RouteOptions = routeOption,
             };
             // processes the request and creates route accordingly
-            getRoute(routeRequest);
+            return await getRoute(routeRequest);
         }
 
         // creates a route between two points 
-        private async void getRoute(RouteRequest routeRequest)
+        private async Task<Boolean> getRoute(RouteRequest routeRequest)
         {
             // result from Route Request is contained in BingMapsRESTToolkit.Route
             var routeResult = await getBingRESTResponseRequest<BingMapsRESTToolkit.Route>(routeRequest);
@@ -232,15 +220,18 @@ namespace MultiModalMapProject
                         myMap.Children.Add(routeLine);
                         myMap.SetView(locs, new Thickness(5), 0);
                     });
+                    return true;
                 }
                 else
                 {
                     // TODO message to be displayed for not finding any route between the two points
+                    return false;
                 }
             }
             else
             {
                 //TODO message to be displayed on map for not finding any route between the two points
+                return false;
             }
         }
 
@@ -366,9 +357,10 @@ namespace MultiModalMapProject
         }
 
         // sets the center of the map to this location
-        private void setCenterOfMap(double latitude, double longitude)
+        private void setCenterOfMap(double latitude, double longitude, double zoomLevel)
         {
             myMap.Center = new Microsoft.Maps.MapControl.WPF.Location(latitude, longitude);
+            myMap.ZoomLevel = zoomLevel;
         }
 
         // zoom in on the map at the place where the kinect is pointing
@@ -394,36 +386,37 @@ namespace MultiModalMapProject
         // this method gets the image of a location at a particular zoom level
         private async Task<BitmapImage> getImageryOfPOI(Coordinate centerPoint)
         {
+            Trace.WriteLine("siladitya mishra");
             var imageRequest = new ImageryRequest()
             {
                 CenterPoint = centerPoint,
-                ZoomLevel = 20,
+                ZoomLevel = 26,
                 ImagerySet = ImageryType.Aerial,
-               BingMapsKey = StaticVariables.bingMapSessionKey,
+                BingMapsKey = StaticVariables.bingMapSessionKey,
             };
-           
-            var bitmapImage = new BitmapImage();
-            using (var imageStream = await ServiceManager.GetImageAsync(imageRequest))
-            {
-                try {
-                    bitmapImage.BeginInit();
-                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmapImage.DecodePixelHeight = StaticVariables.imageHeight;
-                    bitmapImage.DecodePixelWidth = StaticVariables.imageWidth;
-                    bitmapImage.StreamSource = imageStream;
-                    bitmapImage.EndInit();
-                }
-                catch(Exception)
-                {
-                    // in case of no image available from bing map, a default image is loaded
-                    FileStream fileStream =  new FileStream("Images/nopreview.png", FileMode.Open, FileAccess.Read);
-                    bitmapImage.BeginInit();
-                    bitmapImage.StreamSource = fileStream;
-                    bitmapImage.EndInit();
-                }
-
-            }
             
+            var imageStream = await ServiceManager.GetImageAsync(imageRequest);
+            var bitmapImage = new BitmapImage();
+            try
+            {
+               
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.DecodePixelHeight = StaticVariables.imageHeight;
+                bitmapImage.DecodePixelWidth = StaticVariables.imageWidth;
+                bitmapImage.StreamSource = imageStream;
+                bitmapImage.EndInit();
+            }
+            catch (Exception)
+            {
+                // in case of no image available from bing map, a default image is loaded
+                FileStream fileStream = new FileStream("../../Images/nopreview.png", FileMode.Open, FileAccess.Read);
+                
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = fileStream;
+                bitmapImage.EndInit();
+            }
+            bitmapImage.Freeze();
             return bitmapImage;
         }
         
