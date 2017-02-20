@@ -15,7 +15,7 @@ namespace MultiModalMapProject.Util
         // default values for zooming out the map based on hand gesture and speech command
         public static int zoomoutFactor = 2;
         // Due to some alignment problem, the Y coordinate is shifted. Hence this offset tries to place the point exactly on the kinect hand position
-        public static double handPointOffsetY = 25;
+        public static double handPointOffsetY = 30;
 
         public static Microsoft.Maps.MapControl.WPF.Location defaultCenter = new Microsoft.Maps.MapControl.WPF.Location(52.50141, 13.40233);
 
@@ -26,7 +26,7 @@ namespace MultiModalMapProject.Util
         public static RouteOptimizationType optimize = RouteOptimizationType.TimeWithTraffic;
         /**********************************************************************************************/
         // all the travel mode type available on the map
-        public static readonly string[] travelModeTypes = new string[]{ TravelModeType.Driving.ToString(), TravelModeType.Transit.ToString(), TravelModeType.Walking.ToString() };
+        public static readonly string travelModeTypes = TravelModeType.Driving.ToString() + ", " + TravelModeType.Transit.ToString() + " or " + TravelModeType.Walking.ToString();
         // specifies the color to be used to draw route path between two points
         public static Color routePathColor = Colors.Blue;
         
@@ -40,22 +40,29 @@ namespace MultiModalMapProject.Util
         static StaticVariables()
         {
             
-            bingPOISearchEntityNameToEntityId.Add("ATM", 3578);
-            bingPOISearchEntityNameToEntityId.Add("Train Station", 4013);
-            bingPOISearchEntityNameToEntityId.Add("Bus Station", 4170);
-            bingPOISearchEntityNameToEntityId.Add("Airport", 4581);
-            bingPOISearchEntityNameToEntityId.Add("Grocery Store", 5400);
-            bingPOISearchEntityNameToEntityId.Add("Restaurant", 5800);
-            bingPOISearchEntityNameToEntityId.Add("Nightlife", 5813);
-            bingPOISearchEntityNameToEntityId.Add("Shopping", 6512);
-            bingPOISearchEntityNameToEntityId.Add("Hotel", 7011);
-            bingPOISearchEntityNameToEntityId.Add("Bank", 6000);
-            bingPOISearchEntityNameToEntityId.Add("Hospital", 8060);
-            bingPOISearchEntityNameToEntityId.Add("School", 8211);
-            bingPOISearchEntityNameToEntityId.Add("Library", 8231);
-            bingPOISearchEntityNameToEntityId.Add("Museum", 8410);
-            bingPOISearchEntityNameToEntityId.Add("Pharmacy", 9565);
-            bingPOISearchEntityNameToEntityId.Add("Coffee", 9996);
+            bingPOISearchEntityNameToEntityId.Add("atm", 3578);
+            bingPOISearchEntityNameToEntityId.Add("train station", 4013);
+            bingPOISearchEntityNameToEntityId.Add("bus station", 4170);
+            bingPOISearchEntityNameToEntityId.Add("airport", 4581);
+            bingPOISearchEntityNameToEntityId.Add("grocery store", 5400);
+            bingPOISearchEntityNameToEntityId.Add("restaurant", 5800);
+            bingPOISearchEntityNameToEntityId.Add("restaurants", 5800);
+            bingPOISearchEntityNameToEntityId.Add("nightlife", 5813);
+            bingPOISearchEntityNameToEntityId.Add("shopping", 6512);
+            bingPOISearchEntityNameToEntityId.Add("hotel", 7011);
+            bingPOISearchEntityNameToEntityId.Add("hotels", 7011);
+            bingPOISearchEntityNameToEntityId.Add("bank", 6000);
+            bingPOISearchEntityNameToEntityId.Add("banks", 6000);
+            bingPOISearchEntityNameToEntityId.Add("hospital", 8060);
+            bingPOISearchEntityNameToEntityId.Add("hospitals", 8060);
+            bingPOISearchEntityNameToEntityId.Add("school", 8211);
+            bingPOISearchEntityNameToEntityId.Add("schools", 8211);
+            bingPOISearchEntityNameToEntityId.Add("library", 8231);
+            bingPOISearchEntityNameToEntityId.Add("libraries", 8231);
+            bingPOISearchEntityNameToEntityId.Add("museum", 8410);
+            bingPOISearchEntityNameToEntityId.Add("museums", 8410);
+            bingPOISearchEntityNameToEntityId.Add("pharmacy", 9565);
+            bingPOISearchEntityNameToEntityId.Add("coffee", 9996);
 
         }
     }

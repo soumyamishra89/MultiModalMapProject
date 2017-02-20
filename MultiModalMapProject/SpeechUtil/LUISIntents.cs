@@ -19,5 +19,6 @@ namespace MultiModalMapProject.SpeechUtil
         public const string NONE = "NONE";
         public const string PAN = "PAN";
         public const string INSTRUCTIONS = "INSTRUCTIONS";
+        public const string TRAVELMODE = "TRAVELMODE";
     }
 }

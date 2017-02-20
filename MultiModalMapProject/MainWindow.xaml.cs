@@ -46,9 +46,7 @@ namespace MultiModalMapProject
             InitialiseMapComponent();
             //initialiseSpeechComponent();
             InitialiseBingSpeechComponents();
-
-            listMenu();
-            //listResult();
+            
             Instructionpage();
             thisMap = myMap;
         }
@@ -65,31 +63,37 @@ namespace MultiModalMapProject
             });
         }
 
-        private void listMenu()
+        // adds the header to the nearby list 
+        private void nearbyListHeader(string header)
         {
-            nearbyPlacesList.Items.Add(new NearbySearchMenu { TextCategory = "Restaurants", MenuTextColor = "purple" });
-           
+            this.Dispatcher.Invoke(() =>
+            {
+                if (header.ToLower().Contains("hotel"))
+                {
+                    nearbyPlacesList.Items.Add(new NearbySearchMenu { TextCategory = header, MenuTextColor = "#CC7FBC" });
+                }
+                else if (header.ToLower().Contains("restaurant"))
+                {
+                    nearbyPlacesList.Items.Add(new NearbySearchMenu { TextCategory = header, MenuTextColor = "Purple" });
+                }
+                else if (header.ToLower().Contains("bank"))
+                {
+                    nearbyPlacesList.Items.Add(new NearbySearchMenu { TextCategory = header, MenuTextColor = "#4A994A" });
+                }
+                else
+                {
+                    nearbyPlacesList.Items.Add(new NearbySearchMenu { TextCategory = header, MenuTextColor = "#59B5EF" });
+                }
+            });
         }
 
-
-        private void listResult()
+        // removes all items in the nearby places list
+        private void clearNearbyList()
         {
-            BitmapImage bitmapImage1 = new BitmapImage();
-
-                        FileStream fileStream = new FileStream("../../Images/image1.jpg", FileMode.Open, FileAccess.Read);
-
-            bitmapImage1.BeginInit();
-            bitmapImage1.StreamSource = fileStream;
-            bitmapImage1.EndInit();
-            BitmapImage bitmapImage2 = new BitmapImage();
-            FileStream fileStream2 = new FileStream("../../Images/image2.jpg", FileMode.Open, FileAccess.Read);
-
-            bitmapImage2.BeginInit();
-            bitmapImage2.StreamSource = fileStream2;
-            bitmapImage2.EndInit();
-            //Add value to the listBox
-            nearbyPlacesList.Items.Add(new NearbySearch { Image = bitmapImage1, TextName = "Restaurant Alpenstuck", TextAddress ="Gartenstrasse 10115 Berlin", TextContact = "030 21751646"});
-            nearbyPlacesList.Items.Add(new NearbySearch { Image = bitmapImage2, TextName = "Sushi XIV", TextAddress = "Chausseestr. 14 10115 Berlin", TextContact = "030 47599699" });
+            this.Dispatcher.Invoke(() =>
+            {
+                nearbyPlacesList.Items.Clear();
+            });
 
         }
 

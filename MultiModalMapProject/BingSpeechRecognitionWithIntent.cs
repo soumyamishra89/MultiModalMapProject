@@ -156,8 +156,7 @@ namespace MultiModalMapProject
         {
             this.WriteLine("--- Intent received by OnIntentHandler() ---");
             if (!string.IsNullOrEmpty(e.Payload))
-            {
-                
+            {                
                 this.WriteLine("{0}", e.Payload);
                 using (var stream = new MemoryStream(Encoding.Default.GetBytes(e.Payload)))
                 {
@@ -169,11 +168,9 @@ namespace MultiModalMapProject
             }
             else
             {
-                // TODO not recognised error message
+                setSystemWarningMessagesToSpeechLabel(SystemMessages.NOINTENT_MESSAGE);
             }
-           // this.WriteLine("{0}", e.Intent.Body);
-            
-            // this.WriteLine();
+        
         }
 
         // identifies what is the intent of the recognised speech and delegates the intent to the corresponding action in the map
@@ -209,10 +206,12 @@ namespace MultiModalMapProject
                         // Clearing this would mean that a new intent has been expresseed by the user and further routing information is not required.
                         StaticVariables.POINumber = 1;
                         RouteParameters.INSTANCE.clear();
+                        clearNearbyList();
                         ProcessShowNearbyIntent(luisJson);
                         break;
-                    case LUISIntents.SHOW_ROUTE:// TODO add implementation for this block
+                    case LUISIntents.SHOW_ROUTE:
                         hideNearbyPlacesList();
+                        RouteParameters.INSTANCE.clear();
                         ProcessRouteIntent(luisJson, false);
                         break;
                     case LUISIntents.ZOOM_IN:
@@ -258,13 +257,16 @@ namespace MultiModalMapProject
                         // shows or hides the instructions page based on previous state.
                         showOrHideInstructions();
                         break;
+                    case LUISIntents.TRAVELMODE:
+                        hideNearbyPlacesList();
+                        ProcessTravelModeIntent(luisJson);
+                        break;
                     default: break;
                 }
             }
         }
 
         // this function processes the SHOW_LOCATION intent by resolving the location it wants to add pushpin to.
-        // TODO try to extract location if entity is not identified
         private async void ProcessShowLocationIntent(LUISJsonObject luisJson)
         {
             this.WriteLine("{0}", "------------------ProcessShowLocationIntent------------------");
@@ -308,7 +310,7 @@ namespace MultiModalMapProject
                 // if showlocation entity is identified from speech but there is no such location on map
                 else
                 {
-                    // TODO message that location of the address could not be found
+                    setSystemWarningMessagesToSpeechLabel(string.Format(SystemMessages.NOLOCATION_MESSAGE, showLocationEntity.EntityValue));
                 }
                
             }
@@ -366,54 +368,55 @@ namespace MultiModalMapProject
             if (null != showNearbyEntity || null != bingEntity)
             {
                 int? entityId = null;
-                Coordinate coordinateOfEntity = null;
+                Coordinate coordinateOfLocation = null;
                 if (null != showNearbyEntity)
                 {
-                    coordinateOfEntity = await getLocationFromAddress(showNearbyEntity.EntityValue);
-                    if (null == coordinateOfEntity)
+                    coordinateOfLocation = await getLocationFromAddress(showNearbyEntity.EntityValue);
+                    if (null == coordinateOfLocation)
                     {
-                        // TODO message that location of the address could not be found
+                        setSystemWarningMessagesToSpeechLabel(string.Format(SystemMessages.NOLOCATION_MESSAGE, showNearbyEntity.EntityValue));
                         return;
                     }
                 }
 
                 if (null != bingEntity)
                 {
-                    if (StaticVariables.bingPOISearchEntityNameToEntityId.ContainsKey(bingEntity.EntityValue))
+                    if (StaticVariables.bingPOISearchEntityNameToEntityId.ContainsKey(bingEntity.EntityValue.ToLower()))
                     {
-                        entityId = StaticVariables.bingPOISearchEntityNameToEntityId[bingEntity.EntityValue];
+                        entityId = StaticVariables.bingPOISearchEntityNameToEntityId[bingEntity.EntityValue.ToLower()];
                     }
                     if (!entityId.HasValue)
                     {
-                        // TODO entity name cannot be recognised error message
+                        setSystemWarningMessagesToSpeechLabel(string.Format(SystemMessages.NOENTITY_MESSAGE, bingEntity.EntityValue));
                         return;
                     }
                    
                 }
 
                 // adds POI at the location
-                if (null != coordinateOfEntity)
+                if (null != coordinateOfLocation)
                 {
                     if (entityId.HasValue)
                     {
-                        JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude, new EntityTypeFilter(entityId.Value.ToString()));
-
+                        JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(coordinateOfLocation.Latitude, coordinateOfLocation.Longitude, new EntityTypeFilter(entityId.Value.ToString()));
+                        nearbyListHeader(bingEntity.EntityValue);
                         //  add specific places like coffee, bus stop, bar, based on enity name specified by user
                         addPushPinAtPOIAndAddtoList(poiResponse);
                         this.Dispatcher.Invoke(() =>
                         {
-                            setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude, 14);
+                            setCenterOfMap(coordinateOfLocation.Latitude, coordinateOfLocation.Longitude, 14);
 
                         });
                     }
                     else {
-                        JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude);
+                        JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(coordinateOfLocation.Latitude, coordinateOfLocation.Longitude);
 
+                        nearbyListHeader("Places");
                         // finds all POI at the location
                         addPushPinAtPOIAndAddtoList(poiResponse);
                         this.Dispatcher.Invoke(() =>
                         {
-                            setCenterOfMap(coordinateOfEntity.Latitude, coordinateOfEntity.Longitude, 14);
+                            setCenterOfMap(coordinateOfLocation.Latitude, coordinateOfLocation.Longitude, 14);
                         });
                     }
                 }
@@ -422,19 +425,26 @@ namespace MultiModalMapProject
                 {
                     if (entityId.HasValue)
                     {
+                        nearbyListHeader(bingEntity.EntityValue);
                         // if the user mentions a abstractlocation like "here" or "there"
                         if (isAbstractLocationPresent)
                         {
-                            this.Dispatcher.Invoke(() =>
-                            {
-                                addPOIToMapFromKinectHandPosition(new EntityTypeFilter(entityId.Value.ToString()));
-                            });
+                            addPOIToMapFromKinectHandPosition(new EntityTypeFilter(entityId.Value.ToString()));
+
                         }
                         // if the user does not mention any location for finding POI then map center is taken as reference location
                         else
                         {
-                            JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(myMap.Center.Latitude, myMap.Center.Longitude, new EntityTypeFilter(entityId.Value.ToString()));
-
+                            double latitude = 0;
+                            double longitude = 0;
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                Trace.WriteLine("first");
+                                latitude = myMap.Center.Latitude;
+                                longitude = myMap.Center.Longitude;
+                            });
+                            Trace.WriteLine("first");
+                            JsonSchemas.NavteqPoiSchema.Response poiResponse = await getPOIForLocation(latitude, longitude, new EntityTypeFilter(entityId.Value.ToString()));
                             addPushPinAtPOIAndAddtoList(poiResponse);
 
                         }
@@ -445,10 +455,9 @@ namespace MultiModalMapProject
             // then the POI nearby to the location where the kinect hand is pointing to is found
             else
             {
-                this.Dispatcher.Invoke(() =>
-                {
-                    addPOIToMapFromKinectHandPosition();
-                });
+                nearbyListHeader("Places");
+                addPOIToMapFromKinectHandPosition();
+             
             }
         }
 
@@ -463,6 +472,13 @@ namespace MultiModalMapProject
         private void ProcessRouteIntent(LUISJsonObject luisJson, bool isContinuation)
         {
             this.WriteLine("{0}", "------------------ProcessShowRouteIntent------------------:");
+            if (!isContinuation)
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    clearMap();
+                });
+            }
             if (luisJson.Entities.Length > 0)
             {
                 foreach (Entity entity in luisJson.Entities)
@@ -523,6 +539,10 @@ namespace MultiModalMapProject
             // route finding is only done when both to and from addresses are available.
             if (RouteParameters.INSTANCE.isRouteInformationComplete())
             {
+                this.Dispatcher.Invoke(() =>
+                {
+                    clearMap();
+                });
                 if (RouteParameters.INSTANCE.isAddressAvailable())
                 {
                     // showing the route between two points if available
@@ -602,7 +622,7 @@ namespace MultiModalMapProject
                     }
                     catch (Exception e)
                     {
-                        // TODO show some error message
+                        setSystemWarningMessagesToSpeechLabel(string.Format(SystemMessages.UNIDENTIFIEDNUMBER_MESSAGE, numberEntity.EntityValue));
                         this.WriteLine("{0}", e.Message);
                     }
                 }

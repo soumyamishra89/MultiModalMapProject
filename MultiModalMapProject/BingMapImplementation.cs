@@ -85,7 +85,7 @@ namespace MultiModalMapProject
             }
             else
             {
-                //TODO error message to display when the coordinates could not be found
+                setSystemWarningMessagesToSpeechLabel(string.Format(SystemMessages.NOLOCATION_MESSAGE, address));
             }
             return addressCoordinates;
         }
@@ -151,7 +151,7 @@ namespace MultiModalMapProject
 
             else
             {
-                // TODO meesage to display on map
+                setSystemWarningMessagesToSpeechLabel(SystemMessages.NOPOI_MESSAGE);
                 System.Diagnostics.Trace.WriteLine("No result");
             }
         }
@@ -224,13 +224,20 @@ namespace MultiModalMapProject
                 }
                 else
                 {
-                    // TODO message to be displayed for not finding any route between the two points
+                    if (RouteParameters.INSTANCE.isAddressAvailable())
+                        setSystemWarningMessagesToSpeechLabel(string.Format(SystemMessages.NOROUTE_MESSAGE, RouteParameters.INSTANCE.fromLocation, RouteParameters.INSTANCE.toLocation));
+                    else
+                        setSystemWarningMessagesToSpeechLabel(string.Format(SystemMessages.NOROUTE_MESSAGE, RouteParameters.INSTANCE.fromCLocation.Latitude + ", " + RouteParameters.INSTANCE.fromCLocation.Longitude, RouteParameters.INSTANCE.toCLocation.Latitude + ", " + RouteParameters.INSTANCE.toCLocation.Longitude));
                     return false;
                 }
             }
             else
             {
-                //TODO message to be displayed on map for not finding any route between the two points
+                if (RouteParameters.INSTANCE.isAddressAvailable())
+                    setSystemWarningMessagesToSpeechLabel(string.Format(SystemMessages.NOROUTE_MESSAGE, RouteParameters.INSTANCE.fromLocation, RouteParameters.INSTANCE.toLocation));
+                else
+                    setSystemWarningMessagesToSpeechLabel(string.Format(SystemMessages.NOROUTE_MESSAGE, RouteParameters.INSTANCE.fromCLocation.Latitude + ", " + RouteParameters.INSTANCE.fromCLocation.Longitude, RouteParameters.INSTANCE.toCLocation.Latitude+", "+ RouteParameters.INSTANCE.toCLocation.Longitude));
+
                 return false;
             }
         }
@@ -280,10 +287,14 @@ namespace MultiModalMapProject
         // the method gets the location(latitude and longitude) on map based on where the kinect hand (preferrably right hand) is pointing at the map.
         private Microsoft.Maps.MapControl.WPF.Location getLocationFromScreenPoint()
         {
-            System.Windows.Point mapPoint = KinectCanvas.TranslatePoint(kinectHandPositionOnScreen, myMap);
-            // Due to some alignment problem, the Y coordinate is shifted (Open Issue: need to figure out the problem). Hence this offset tries to place the point exactly on the kinect hand position
-            mapPoint.Y = mapPoint.Y - StaticVariables.handPointOffsetY;
-            Microsoft.Maps.MapControl.WPF.Location l = myMap.ViewportPointToLocation(mapPoint);
+            Microsoft.Maps.MapControl.WPF.Location l = null;
+            this.Dispatcher.Invoke(() =>
+            {
+                System.Windows.Point mapPoint = KinectCanvas.TranslatePoint(kinectHandPositionOnScreen, myMap);
+                // Due to some alignment problem, the Y coordinate is shifted (Open Issue: need to figure out the problem). Hence this offset tries to place the point exactly on the kinect hand position
+                mapPoint.Y = mapPoint.Y - StaticVariables.handPointOffsetY;
+                l = myMap.ViewportPointToLocation(mapPoint);
+            });
             return l;
         }
 
@@ -292,39 +303,50 @@ namespace MultiModalMapProject
         private async void addPOIToMapFromKinectHandPosition(params BingQueryFilters.BingQueryFilter[] queryFilters)
         {
             Microsoft.Maps.MapControl.WPF.Location handLocation = getLocationFromScreenPoint();
-
-            // returns a NavteqPoiSchema.Response containing details of the POI nearby the location. 
-            var pois = await getPOIForLocation(handLocation.Latitude, handLocation.Longitude, queryFilters);
-
-            // in case of no result is found, a no result message needs to be displayed
-            if (pois != null && pois.ResultSet != null &&
-                                       pois.ResultSet.Results != null &&
-                                       pois.ResultSet.Results.Length > 0)
+            if (null != handLocation)
             {
-                myMap.Children.Clear();
-                foreach (var poi in pois.ResultSet.Results)
+                // returns a NavteqPoiSchema.Response containing details of the POI nearby the location. 
+                var pois = await getPOIForLocation(handLocation.Latitude, handLocation.Longitude, queryFilters);
+
+                // in case of no result is found, a no result message needs to be displayed
+                if (pois != null && pois.ResultSet != null &&
+                                           pois.ResultSet.Results != null &&
+                                           pois.ResultSet.Results.Length > 0)
                 {
-                    var loc = new Microsoft.Maps.MapControl.WPF.Location(poi.Latitude, poi.Longitude);
-                    var pin = new Pushpin();
-                    pin.Tag = poi;
-                    pin.Location = loc;
-                    myMap.Children.Add(pin);
-                    // TODO add levels of POI to the screen
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        myMap.Children.Clear();
+                        nearbyPlacesList.Visibility = Visibility.Visible;
+                    });
+                    foreach (var poi in pois.ResultSet.Results)
+                    {
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            var loc = new Microsoft.Maps.MapControl.WPF.Location(poi.Latitude, poi.Longitude);
+                            var pin = new Pushpin();
+                            pin.Tag = poi;
+                            pin.Location = loc;
+                            pin.Content = "" + StaticVariables.POINumber;
+                            myMap.Children.Add(pin);
+                        });
+                        BitmapImage poiImage = await getImageryOfPOI(new Coordinate(poi.Latitude, poi.Longitude));
+
+                        addPOIToListView(poiImage, poi, StaticVariables.POINumber++);
+                    }
+                }
+                else
+                {
+                    setSystemWarningMessagesToSpeechLabel(SystemMessages.NOPOI_MESSAGE);
                 }
             }
-            else
-            {
-                // TODO no result message
-            }
         }
-
         // resets the map to original setting and removes all children from map.
         private void resetMap()
         {
             clearMap();
             //sets the zoom level to 0 and center of the map to defaultCenter for resetting the map
             myMap.SetView(StaticVariables.defaultCenter, 0);
-            // TODO remove any other elements added in the application due to user action
+            
         }
 
         // removes all the child elements in the map
@@ -386,11 +408,10 @@ namespace MultiModalMapProject
         // this method gets the image of a location at a particular zoom level
         private async Task<BitmapImage> getImageryOfPOI(Coordinate centerPoint)
         {
-            Trace.WriteLine("siladitya mishra");
             var imageRequest = new ImageryRequest()
             {
                 CenterPoint = centerPoint,
-                ZoomLevel = 26,
+                ZoomLevel = 21,
                 ImagerySet = ImageryType.Aerial,
                 BingMapsKey = StaticVariables.bingMapSessionKey,
             };
@@ -399,7 +420,6 @@ namespace MultiModalMapProject
             var bitmapImage = new BitmapImage();
             try
             {
-               
                 bitmapImage.BeginInit();
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapImage.DecodePixelHeight = StaticVariables.imageHeight;
