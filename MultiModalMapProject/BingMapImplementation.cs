@@ -35,6 +35,7 @@ namespace MultiModalMapProject
         private void InitialiseMapComponent()
         {
             myMap.Center = StaticVariables.defaultCenter;
+            myMap.ZoomLevel = 2;
             // getting a session key from bing maps for using non-billable call to bing rest api
             myMap.CredentialsProvider.GetCredentials(c =>
             {
@@ -345,7 +346,7 @@ namespace MultiModalMapProject
         {
             clearMap();
             //sets the zoom level to 0 and center of the map to defaultCenter for resetting the map
-            myMap.SetView(StaticVariables.defaultCenter, 0);
+            myMap.SetView(StaticVariables.defaultCenter, 2);
             
         }
 

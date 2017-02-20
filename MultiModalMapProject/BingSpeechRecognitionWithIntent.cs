@@ -253,7 +253,7 @@ namespace MultiModalMapProject
                         resetApplication();
                         break;
                     case LUISIntents.INSTRUCTIONS:
-                        hideNearbyPlacesList();
+                       
                         // shows or hides the instructions page based on previous state.
                         showOrHideInstructions();
                         break;
