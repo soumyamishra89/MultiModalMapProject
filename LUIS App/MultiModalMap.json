@@ -1,0 +1,1180 @@
+{
+  "luis_schema_version": "1.3.1",
+  "versionId": "0.1",
+  "name": "MultiModalMap",
+  "desc": "",
+  "culture": "en-us",
+  "intents": [
+    {
+      "name": "Instructions"
+    },
+    {
+      "name": "None"
+    },
+    {
+      "name": "Pan"
+    },
+    {
+      "name": "Reset"
+    },
+    {
+      "name": "Route"
+    },
+    {
+      "name": "Show Location"
+    },
+    {
+      "name": "Show Nearby"
+    },
+    {
+      "name": "TravelMode"
+    },
+    {
+      "name": "Zoom in"
+    },
+    {
+      "name": "Zoom out"
+    }
+  ],
+  "entities": [
+    {
+      "name": "abstractlocation"
+    },
+    {
+      "name": "bingentity"
+    },
+    {
+      "name": "Location",
+      "children": [
+        "toLocation",
+        "fromLocation"
+      ]
+    }
+  ],
+  "composites": [],
+  "closedLists": [],
+  "bing_entities": [
+    "number"
+  ],
+  "actions": [],
+  "model_features": [
+    {
+      "name": "placeNames",
+      "mode": true,
+      "words": "Berlin,London,Brandenburg Gate,San Francisco,New York",
+      "activated": true
+    }
+  ],
+  "regex_features": [],
+  "utterances": [
+    {
+      "text": "show me coffee place in berlin",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 5,
+          "endPos": 5
+        },
+        {
+          "entity": "bingentity",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show nearby coffee place",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "bingentity",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show me places nearby berlin",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "what are places nearby paris",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "show places nearby munich",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "what are the places near alexanderplatz",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "show me this place",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show me berlin",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show me paris",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "what is this place",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "where is that place",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "i think that this should not be there are some of the things we can move like a showing the pod 6.18423 second thing that would be",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 7,
+          "endPos": 7
+        }
+      ]
+    },
+    {
+      "text": "is this will be there but i'm saying but you don't need to",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "desterro yeah i think i have",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "i do",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "sing a song",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "ok ok",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "what",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "hi",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "show some place nearby berlin",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "is there a coffee place near brandenburg gate",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 6,
+          "endPos": 7
+        },
+        {
+          "entity": "bingentity",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "where is busstation near paris",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 4,
+          "endPos": 4
+        },
+        {
+          "entity": "bingentity",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show some restaurants in london",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 4,
+          "endPos": 4
+        },
+        {
+          "entity": "bingentity",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show me restaurants here",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 3,
+          "endPos": 3
+        },
+        {
+          "entity": "bingentity",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show nearby frankfurt",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show near here",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show some places there",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "is there any hotel here",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 4,
+          "endPos": 4
+        },
+        {
+          "entity": "bingentity",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "show restaurants here",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 2,
+          "endPos": 2
+        },
+        {
+          "entity": "bingentity",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "show some hotels there",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 3,
+          "endPos": 3
+        },
+        {
+          "entity": "bingentity",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show places near paris",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "show some places near berlin",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "show me places near here",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "show some places near here",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "show some places near hamburg",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "show some places near gothenberg",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "show some places near brussels",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "show some bank nearby berlin",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 4,
+          "endPos": 4
+        },
+        {
+          "entity": "bingentity",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show banks nearby berlin",
+      "intent": "Show Nearby",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 3,
+          "endPos": 3
+        },
+        {
+          "entity": "bingentity",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "zoom in by 8",
+      "intent": "Zoom in",
+      "entities": []
+    },
+    {
+      "text": "zoom in map by 5",
+      "intent": "Zoom in",
+      "entities": []
+    },
+    {
+      "text": "zoom in by 10",
+      "intent": "Zoom in",
+      "entities": []
+    },
+    {
+      "text": "zoom in by 3",
+      "intent": "Zoom in",
+      "entities": []
+    },
+    {
+      "text": "zoom in on berlin",
+      "intent": "Zoom in",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "zoom in here by 10",
+      "intent": "Zoom in",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "zoom in here",
+      "intent": "Zoom in",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "zooming by 2",
+      "intent": "Zoom in",
+      "entities": []
+    },
+    {
+      "text": "move in by 4",
+      "intent": "Zoom in",
+      "entities": []
+    },
+    {
+      "text": "move in here",
+      "intent": "Zoom in",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "zoom in by 2",
+      "intent": "Zoom in",
+      "entities": []
+    },
+    {
+      "text": "by 4",
+      "intent": "Zoom in",
+      "entities": []
+    },
+    {
+      "text": "zoom in my phone",
+      "intent": "Zoom in",
+      "entities": []
+    },
+    {
+      "text": "zoom out map by 3",
+      "intent": "Zoom out",
+      "entities": []
+    },
+    {
+      "text": "zoom out the map by 7",
+      "intent": "Zoom out",
+      "entities": []
+    },
+    {
+      "text": "zoom out by 12",
+      "intent": "Zoom out",
+      "entities": []
+    },
+    {
+      "text": "zoom out on rome by 7",
+      "intent": "Zoom out",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "zoom out there",
+      "intent": "Zoom out",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "move out by 6",
+      "intent": "Zoom out",
+      "entities": []
+    },
+    {
+      "text": "move out there",
+      "intent": "Zoom out",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "reset the map",
+      "intent": "Reset",
+      "entities": []
+    },
+    {
+      "text": "reset",
+      "intent": "Reset",
+      "entities": []
+    },
+    {
+      "text": "restart",
+      "intent": "Reset",
+      "entities": []
+    },
+    {
+      "text": "start application again",
+      "intent": "Reset",
+      "entities": []
+    },
+    {
+      "text": "show berlin",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "show paris",
+      "intent": "Show Location",
+      "entities": []
+    },
+    {
+      "text": "show amsterdam",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "show stockholm",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "show milan",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "show frankfurt",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "show me here",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show there",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "show me battlin",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show me washington",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show gothenberg",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "show me helsinki",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show me delhi",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show me tierpark",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "to berlin",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "from rotterdam",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "show me frankfurt",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "where is berlin",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "where is delhi",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show me mumbai",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "show me london",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "Location",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "to here",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "here",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 0,
+          "endPos": 0
+        }
+      ]
+    },
+    {
+      "text": "to there",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "there",
+      "intent": "Show Location",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 0,
+          "endPos": 0
+        }
+      ]
+    },
+    {
+      "text": "show route from berlin to munich",
+      "intent": "Route",
+      "entities": [
+        {
+          "entity": "Location::toLocation",
+          "startPos": 5,
+          "endPos": 5
+        },
+        {
+          "entity": "Location::fromLocation",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "how can i go from tu berlin to east side gallery",
+      "intent": "Route",
+      "entities": [
+        {
+          "entity": "Location::toLocation",
+          "startPos": 8,
+          "endPos": 10
+        },
+        {
+          "entity": "Location::fromLocation",
+          "startPos": 5,
+          "endPos": 6
+        }
+      ]
+    },
+    {
+      "text": "show me the way from london to paris",
+      "intent": "Route",
+      "entities": [
+        {
+          "entity": "Location::toLocation",
+          "startPos": 7,
+          "endPos": 7
+        },
+        {
+          "entity": "Location::fromLocation",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "show the route from warsaw to budapest",
+      "intent": "Route",
+      "entities": [
+        {
+          "entity": "Location::toLocation",
+          "startPos": 6,
+          "endPos": 6
+        },
+        {
+          "entity": "Location::fromLocation",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "how can i go from zurich to luxemburg",
+      "intent": "Route",
+      "entities": [
+        {
+          "entity": "Location::toLocation",
+          "startPos": 7,
+          "endPos": 7
+        },
+        {
+          "entity": "Location::fromLocation",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "show me the way from brandenburg gate to aristotelessteig",
+      "intent": "Route",
+      "entities": [
+        {
+          "entity": "Location::toLocation",
+          "startPos": 8,
+          "endPos": 8
+        },
+        {
+          "entity": "Location::fromLocation",
+          "startPos": 5,
+          "endPos": 6
+        }
+      ]
+    },
+    {
+      "text": "show me way from here to there",
+      "intent": "Route",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 4,
+          "endPos": 4
+        },
+        {
+          "entity": "abstractlocation",
+          "startPos": 6,
+          "endPos": 6
+        }
+      ]
+    },
+    {
+      "text": "i want to go from berlin to munich",
+      "intent": "Route",
+      "entities": [
+        {
+          "entity": "Location::toLocation",
+          "startPos": 7,
+          "endPos": 7
+        },
+        {
+          "entity": "Location::fromLocation",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "i want to go to berlin",
+      "intent": "Route",
+      "entities": [
+        {
+          "entity": "Location::toLocation",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "i want to go from helsinki to madagascar",
+      "intent": "Route",
+      "entities": [
+        {
+          "entity": "Location::toLocation",
+          "startPos": 7,
+          "endPos": 7
+        },
+        {
+          "entity": "Location::fromLocation",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "show me from here",
+      "intent": "Route",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "show me from here to there",
+      "intent": "Route",
+      "entities": [
+        {
+          "entity": "abstractlocation",
+          "startPos": 3,
+          "endPos": 3
+        },
+        {
+          "entity": "abstractlocation",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "move the map",
+      "intent": "Pan",
+      "entities": []
+    },
+    {
+      "text": "start moving",
+      "intent": "Pan",
+      "entities": []
+    },
+    {
+      "text": "stop moving",
+      "intent": "Pan",
+      "entities": []
+    },
+    {
+      "text": "move",
+      "intent": "Pan",
+      "entities": []
+    },
+    {
+      "text": "start movie",
+      "intent": "Pan",
+      "entities": []
+    },
+    {
+      "text": "help me",
+      "intent": "Instructions",
+      "entities": []
+    },
+    {
+      "text": "help",
+      "intent": "Instructions",
+      "entities": []
+    },
+    {
+      "text": "ok",
+      "intent": "Instructions",
+      "entities": []
+    },
+    {
+      "text": "driving",
+      "intent": "TravelMode",
+      "entities": []
+    },
+    {
+      "text": "walking",
+      "intent": "TravelMode",
+      "entities": []
+    },
+    {
+      "text": "transit",
+      "intent": "TravelMode",
+      "entities": []
+    },
+    {
+      "text": "walk",
+      "intent": "TravelMode",
+      "entities": []
+    },
+    {
+      "text": "drive",
+      "intent": "TravelMode",
+      "entities": []
+    }
+  ]
+}
