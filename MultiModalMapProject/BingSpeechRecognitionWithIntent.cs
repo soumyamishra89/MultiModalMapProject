@@ -680,7 +680,7 @@ namespace MultiModalMapProject
             this.WriteLine("Error code: {0}", e.SpeechErrorCode.ToString());
             this.WriteLine("Error text: {0}", e.SpeechErrorText);
 
-            //this.micClient.StartMicAndRecognition();
+            this.micClient.StartMicAndRecognition();
 
             // this.WriteLine();
         }

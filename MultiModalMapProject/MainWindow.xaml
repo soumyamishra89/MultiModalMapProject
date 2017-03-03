@@ -7,7 +7,7 @@
         xmlns:resx="clr-namespace:MultiModalMapProject.Properties"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:my="clr-namespace:Microsoft.Samples.Kinect.WpfViewers;assembly=Microsoft.Samples.Kinect.WpfViewers"
-        Title="MainWindow" Height="735" Width="770" Loaded="WindowLoaded" Closing="WindowClosing">
+        Title="MultiModalMap" Height="735" Width="770" Loaded="WindowLoaded" Closing="WindowClosing">
 
     <Grid >
         <Grid.RowDefinitions>
@@ -81,7 +81,7 @@
 -->
         <Border BorderBrush="DarkCyan" BorderThickness="1" Grid.Row="4" >
 
-            <Label Name="SpeechLabel" Content="SpeechLabel" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextElement.FontSize="20" TextElement.FontWeight="DemiBold" TextElement.FontStyle="Italic" Background="White" Foreground="Black">
+            <Label Name="SpeechLabel" Content="Welcome" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextElement.FontSize="20" TextElement.FontWeight="DemiBold" TextElement.FontStyle="Italic" Background="White" Foreground="Black">
                
             </Label>
         </Border>

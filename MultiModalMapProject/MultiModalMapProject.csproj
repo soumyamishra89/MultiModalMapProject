@@ -143,8 +143,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\chat.png" />
-    <Content Include="cohete.avi" />
     <Resource Include="Images\move.png" />
     <Resource Include="Images\zoomin.png" />
     <Resource Include="Images\zoomout.png" />
@@ -152,8 +150,6 @@
     <Resource Include="Images\nopreview.png" />
     <Content Include="lib\Microsoft.Samples.Kinect.WpfViewers.dll" />
     <Resource Include="Images\restaurant.png" />
-    <Resource Include="Images\image1.jpg" />
-    <Resource Include="Images\image2.jpg" />
     <Content Include="lib\Coding4Fun.Kinect.Wpf.dll" />
     <Content Include="lib\KinectControls.dll" />
     <Content Include="lib\Microsoft.Kinect.dll" />
